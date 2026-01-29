@@ -305,7 +305,7 @@ const RoomsSection = () => {
       title: "For Reservations",
       items: [
         { text: "+91 9810301645", href: "tel:+919810301645" },
-        { text: "+91 9848155496", href: "tel:+919848155496" },
+        { text: "+91 9845155496", href: "tel:+919845155496" },
       ],
     },
     {
@@ -330,7 +330,7 @@ const RoomsSection = () => {
           text: (
             <>
               Burra Bungalow<br />
-              Savitri Bhawan (Near Wyneberg Junior School)<br />
+              Savitri Bhawan (Near wynberg Junior School)<br />
               Rajpur Road, Mussoorie<br />
               Uttarakhand 248197
             </>

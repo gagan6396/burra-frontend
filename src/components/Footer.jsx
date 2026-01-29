@@ -33,7 +33,7 @@ export default function Footer() {
       icon: Phone,
       items: [
         { text: "+91 9810301645", href: "tel:+919810301645" },
-        { text: "+91 9848155496", href: "tel:+919848155496" },
+        { text: "+91 9845155496", href: "tel:+919845155496" },
       ],
     },
     {
