@@ -82,11 +82,7 @@ export default function Footer() {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6 max-w-md">
-              Burra Bungalow is a charming colonial-style retreat offering peace,
-              comfort, and scenic views. Just a short walk or drive from the
-              Mall, it features spacious, sunlit interiors, a fully equipped
-              kitchen, Wi-Fi, TV, and private parking for up to three cars making
-              it an ideal place to relax, unwind, and reconnect.
+            Burra Bungalow is a charming colonial-style bungalow in Mussoorie offering scenic views, modern comforts, and peaceful surroundings. Ideal as a cozy homestay or private villa stay, perfect for relaxing mountain getaways.
             </p>
 
             {/* Social Icons */}

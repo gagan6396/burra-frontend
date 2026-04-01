@@ -33,15 +33,18 @@ import {
   AlertCircle,
   Users as GuestIcon,
   Award,
+  Cctv,
+  Flame,
 } from "lucide-react";
 import { useRef } from "react";
 const rooms = [
   {
     title: "Burra Bungalow",
     description:
-      "Our spacious bungalow offers a perfect balance of comfort and understated luxury for families or groups visiting Mussoorie. Featuring three elegantly appointed bedrooms with heated blankets, two patios eastern and western facing, premium amenities, and serene, panoramic views, it promises a warm and restful retreat in every season. Step onto the private patios to soak in serene, panoramic views of the surrounding landscape perfect for slow mornings with a cup of tea or quiet evenings under the open sky. Complemented by premium amenities, generous living spaces, and abundant natural light, every detail has been carefully considered to create an atmosphere of relaxation and ease.",
+      "Our spacious private villa in Mussoorie is a boutique homestay offering the perfect blend of comfort, luxury, and peaceful surroundings, recognized among the top five homestays and ideal for a family stay in Mussoorie. This 3 bedroom villa in Mussoorie features elegant ensuite bedrooms with heated blankets and generous living spaces designed for relaxation. Enjoy stunning sunrise views and serene mountain views from the eastern and western patios, perfect for quiet mornings and evenings. The property is private, easily accessible, and includes private parking, making it a seamless getaway. Whether you're looking for a Mussoorie homestay or a cozy cottage with view, this villa offers a warm and memorable retreat.",
     features: [
       { icon: Bed, text: "Three bedrooms" },
+      { icon: Cctv, text: "External Cameras" },
       { icon: Users, text: "Accommodates up to 6 adults" },
       { icon: Bath, text: "Three attached Bathroom" },
       { icon: Coffee, text: "Living room cum dinning area" },
@@ -75,6 +78,7 @@ const rooms = [
       "Experience authentic luxury in our handcrafted annexe, thoughtfully designed to blend natural charm with refined comfort. The annexe features two beautifully crafted bedrooms with heated blankets, ensuring a warm and cozy stay even during cooler mountain nights. Step out onto the private gallery to take in panoramic forest views, where the sights and sounds of nature create a deeply calming atmosphere. Inside, elegant pinewood interiors, warm textures, and carefully curated details enhance the sense of quiet sophistication.",
     features: [
       { icon: Bed, text: "Two bedrooms" },
+      { icon: Cctv, text: "External Cameras" },
       { icon: Users, text: "Perfect for families" },
       { icon: Bath, text: "Attached bathroom" },
       { icon: Utensils, text: "Sittng cum dinning area" },
@@ -90,6 +94,7 @@ const rooms = [
       "/20.webp",
       "/21.webp",
       "/22.webp",
+      "library.webp",
       "/23.webp",
       "/24.webp",
       "/25.webp",
@@ -128,7 +133,7 @@ const RoomsSection = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const modalRef = useRef(null);
 
-  const BASE_URLL = "http://localhost:5001";
+  const BASE_URLL = "https://burrabungalow.com";
 
   // Handle responsive thumbnail count
   useEffect(() => {
@@ -518,7 +523,52 @@ const RoomsSection = () => {
               </div>
             </div>
           </div>
+          <div className="mt-32 pt-20 border-t border-gray-200">
+            <img src="/vine1.png" alt="" className="object-contain w-auto h-full" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              {/* Image Section */}
+              <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-3xl shadow-2xl group">
+                <img
+                  src="/dinning.webp"
+                  alt="Dining Experience"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+              </div>
 
+              {/* Content Section */}
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold">
+                    <Utensils className="w-4 h-4" />
+                    CULINARY EXCELLENCE
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">
+                    A Classic Culinary Experience
+                  </h3>
+                  <p className="text-lg text-gray-600 leading-relaxed">
+                  Step into a boutique homestay where you can enjoy private, peaceful dining with simple, authentic food made with care. Surrounded by beautiful mountain views and sunrise views, you can relax with home-cooked meals and a cozy bonfire & sit-out, making every meal a warm and memorable experience.
+                  </p>
+                </div>
+
+                {/* Features List */}
+                <div className="space-y-4">
+                  {[
+                    "Wholesome home cooked meals",
+                    "Balcony with valley views",
+                    "Caretaker / home-cooked meals",
+                  ].map((feature, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center">
+                        <div className="w-2 h-2 bg-amber-600 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
           {/* Property Highlights Section - AFTER BURRA BUNGALOW */}
           <div className="mt-32 pt-20 border-t border-gray-200 relative overflow-hidden">
             {/* LARGE VINES FOR PROPERTY HIGHLIGHTS SECTION ONLY */}
@@ -591,6 +641,7 @@ const RoomsSection = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {[
                       { icon: Car, text: "Parking for 3 cars", color: "bg-blue-100 text-blue-700" },
+                      { icon: Cctv, text: "External Cameras on Property", color: "bg-blue-100 text-blue-700" },
                       { icon: Droplets, text: "24×7 spring water", color: "bg-cyan-100 text-cyan-700" },
                       { icon: Wifi, text: "Good Wi-Fi connectivity", color: "bg-purple-100 text-purple-700" },
                       { icon: Tv, text: "Large TV in lobby", color: "bg-red-100 text-red-700" },
@@ -956,57 +1007,60 @@ const RoomsSection = () => {
             </div>
           </div>
 
-          {/* Dining Section */}
+          {/* ===== BONFIRE SITOUT SECTION — mirrors Culinary Experience layout ===== */}
           <div className="mt-32 pt-20 border-t border-gray-200">
-            <img src="/vine1.png" alt="" className="object-contain w-auto h-full" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               {/* Image Section */}
               <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-3xl shadow-2xl group">
                 <img
-                  src="/dinning.webp"
-                  alt="Dining Experience"
+                  src="/bonfire.webp"
+                  alt="Bonfire Sitout Area"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
+                {/* Floating badge on image */}
+                
               </div>
 
               {/* Content Section */}
               <div className="space-y-8">
                 <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold">
-                    <Utensils className="w-4 h-4" />
-                    CULINARY EXCELLENCE
+                  <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-semibold">
+                    <Flame className="w-4 h-4" />
+                    OUTDOOR SITOUT
                   </div>
                   <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">
-                    A Classic Culinary Experience
+                    The Bonfire Experience
                   </h3>
                   <p className="text-lg text-gray-600 leading-relaxed">
-                    Step into a world where time-honoured recipes, refined
-                    techniques, and thoughtful presentation come together at the
-                    table. Our classic culinary experience celebrates authentic
-                    flavours crafted with care, using quality ingredients and
-                    traditional methods that let each dish speak for itself.
+                  As the mountain air cools and the last light fades behind the ridgeline, our open-air bonfire sitout comes alive. Gather around a crackling bonfire with steaming chai and hot pakodas close at hand the kind of evening that stays with you long after you leave the mountains.
                   </p>
                 </div>
 
-                {/* Features List */}
+                {/* Features List — same style as Culinary section */}
                 <div className="space-y-4">
                   {[
-                    "Wholesome home cooked meals",
-                    "Scenic mountain views",
-                    "Personalized service",
+                    "Bonfire & sit-out",
+                    "Comfortable seating with cushioned chairs",
+                    "Caretaker / home-cooked meals",
+                    "Stunning open-sky stargazing away from city lights",
                   ].map((feature, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center">
-                        <div className="w-2 h-2 bg-amber-600 rounded-full"></div>
+                      <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center shrink-0">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                       </div>
                       <span className="text-gray-700">{feature}</span>
                     </div>
                   ))}
                 </div>
+
+                {/* Evening hours note */}
+                
               </div>
             </div>
           </div>
+          {/* ===== END BONFIRE SITOUT SECTION ===== */}
+
         </div>
 
         <style>{`

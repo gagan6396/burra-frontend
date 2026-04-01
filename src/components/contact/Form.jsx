@@ -15,7 +15,7 @@ import {
   Home,
 } from "lucide-react";
 
-const BASE_URLL = "http://localhost:5001"
+const BASE_URLL = "https://burrabungalow.com"
 
 export default function ContactEnquiry() {
   console.log("YETEYEYEY",BASE_URLL)

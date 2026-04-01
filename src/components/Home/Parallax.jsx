@@ -41,9 +41,8 @@ const ParallaxBanner = () => {
           {/* Description */}
           <div className="max-w-2xl mx-auto mb-10">
             <p className="text-base md:text-lg leading-relaxed">
-              Burra Bungalow offers the perfect escape, 
-              surrounded by natural tranquility. Whether it's a romantic getaway or family fun, 
-              enjoy a refreshing retreat at one of the best homestay in Mussoorie.
+                          Burra Bungalow offers the perfect escape, surrounded by serene natural beauty and mountain tranquility. Whether you’re planning a romantic getaway or a fun-filled family holiday, this charming bungalow in Mussoorie provides a refreshing retreat in the hills. Recognized as one of the best homestays in Mussoorie, it blends warm hospitality with modern comfort. For those seeking the elegance of a private villa stay, Burra Bungalow delivers spacious living, peaceful surroundings, and an unforgettable hillside experience.
+
             </p>
           </div>
         </div>

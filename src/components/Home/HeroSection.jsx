@@ -655,7 +655,7 @@ const Stat = ({ icon, value, label, desc }) => (
     <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center bg-emerald-100 rounded-xl text-emerald-600">
       {icon}
     </div>
-    <div className="text-3xl font-bold">{value}</div>
+    <div className="text-3xl font-bold text-black">{value}</div>
     <div className="text-emerald-600 font-semibold">{label}</div>
     <div className="text-gray-600 text-sm">{desc}</div>
   </div>

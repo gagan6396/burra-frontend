@@ -1,53 +1,151 @@
-// If you want a carousel, install: npm install swiper
+import { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Quote, ChevronLeft, ChevronRight, X } from "lucide-react";
 
 const TestimonialsCarousel = () => {
-  const testimonials = [
-    {
-      name: "Rituraj",
-      role: "Family Vacation",
-      rating: 5,
-      content:
-        "Burra Bungalow has an old World charm with all the necessities for a modern day traveller craving for quietness and space for reflection. The location is very much walkable to the Mall Road, so location isn’t much of a compromise either. The food, the support staff Hemant and his wife are so generous and they turn up some really delectable homemade fare. Do try the Oriental menu one of the nights. The neatness, the large rooms, the amenities are a big plus. The host Mrinalini ji is just a phone call away and she did ensure we have an overall seamless and a peaceful stay. A must recommended and a unique home stay!!",
-      image:
-        "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
-    },
-    {
-      name: "Niharika",
-      role: "Honeymoon Trip",
-      rating: 5,
-      content:
-        "Our stay at Burra Bunglow was absolutely delightful ! Mrinalini was a wonderful host and made our stay extremely comfortable. She made sure she shared all the information about our stay beforehand while made our check-in process super smooth. What strikes you the most is the level of cleanliness of the property (Something we were very particular about given that we were travelling with a toddler). Highly remmend for those travelling with kids and families. Definitely coming back to stay again",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
-    },
-    {
-      name: "Robyn",
-      role: "Weekend Retreat",
-      rating: 4,
-      content:
-        "Loved our stay in Mussoorie. Hemant made us feel so very welcome and created delicious meals for us. A comfortable place and large enough for a group or family looking for a space to spend time relaxing together. A lovely home with everything you need to enjoy a peaceful stay!",
-      image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
-    },
-    {
-      name: "Subhro",
-      role: "Business Traveler",
-      rating: 5,
-      content:
-        "It was an amazing stay. Well decorated with a sense of taste. Amazing service, the cook and the helper was simply outstanding. They cooked us fantastic meals and always proactive in asking us if we need anything else. Had a very relaxed stay and will definitely recommend. Mrinalini's mother was super friendly and we had an amazing chat, made me feel like a family member. Thanks Mrinalini for the amazing stay. It's an amazing, spacious stay and the decor was classy. Thanks for everything!",
-      image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
-    },
-  ];
+  const [testimonials, setTestimonials] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    rating: 5,
+    content: ""
+  });
+  const [hoverRating, setHoverRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState({ type: "", text: "" });
+
+  const API_BASE_URL = 'https://burrabungalow.com/api';
+
+  // Fetch testimonials from backend on component mount
+  useEffect(() => {
+    fetchTestimonials();
+    // Log when component mounts to verify
+    console.log("TestimonialsCarousel mounted with id:", document.getElementById('testimonial'));
+  }, []);
+
+  // Fetch testimonials from backend
+  const fetchTestimonials = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/testimonials`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setTestimonials(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleRatingClick = (rating) => {
+    setFormData(prev => ({
+      ...prev,
+      rating: rating
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage({ type: "", text: "" });
+
+    // Validate form
+    if (!formData.name || !formData.email || !formData.content) {
+      setSubmitMessage({ 
+        type: "error", 
+        text: "Please fill in all required fields (Name, Email, and Review)" 
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setSubmitMessage({ 
+        type: "error", 
+        text: "Please enter a valid email address" 
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/testimonials`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong');
+      }
+
+      setSubmitMessage({ 
+        type: "success", 
+        text: "Thank you for your review! It has been added successfully." 
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        rating: 5,
+        content: ""
+      });
+
+      // Refresh testimonials
+      await fetchTestimonials();
+
+      // Close form after 2 seconds
+      setTimeout(() => {
+        setShowForm(false);
+        setSubmitMessage({ type: "", text: "" });
+      }, 2000);
+
+    } catch (error) {
+      setSubmitMessage({ 
+        type: "error", 
+        text: error.message || "Something went wrong. Please try again." 
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Get initials from name for avatar
+  const getInitials = (name) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
-    <section className="w-full bg-gradient-to-br from-amber-50 via-white to-stone-50 py-16 px-4 md:px-8">
+    <section 
+      id="testimonial"  // CHANGED: Fixed from "test" to "testimonial"
+      className="w-full bg-gradient-to-br from-amber-50 via-white to-stone-50 py-16 px-4 md:px-8"
+      style={{ scrollMarginTop: "80px" }}  // Prevents navbar from covering the section
+    >
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -61,70 +159,206 @@ const TestimonialsCarousel = () => {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative">
-          <Swiper
-            modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={30}
-            slidesPerView={1}
-            navigation={{
-              nextEl: ".swiper-button-next",
-              prevEl: ".swiper-button-prev",
-            }}
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 5000 }}
-            loop={true}
-            className="pb-12"
-          >
-            {testimonials.map((testimonial, index) => (
-              <SwiperSlide key={index}>
-                <div className="bg-gradient-to-br from-amber-50 to-stone-50 p-8 rounded-xl border border-amber-100">
-                  <Quote className="w-10 h-10 text-amber-400 mb-4" />
+        {testimonials.length > 0 ? (
+          <div className="relative mb-8">
+            <Swiper
+              modules={[Navigation, Pagination, Autoplay]}
+              spaceBetween={30}
+              slidesPerView={1}
+              navigation={{
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              }}
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 5000 }}
+              loop={true}
+              className="pb-6 md:pb-10 [&_.swiper-pagination]:hidden md:[&_.swiper-pagination]:block"
+            >
+              {testimonials.map((testimonial) => (
+                <SwiperSlide key={testimonial._id || testimonial.id}>
+                  <div className="bg-gradient-to-br from-amber-50 to-stone-50 p-8 rounded-xl border border-amber-100">
+                    <Quote className="w-10 h-10 text-amber-400 mb-4" />
 
-                  <div className="flex mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-5 h-5 ${
-                          i < testimonial.rating
-                            ? "fill-emerald-500 text-emerald-500"
-                            : "fill-gray-200 text-gray-200"
-                        } mr-1`}
-                      />
-                    ))}
-                  </div>
+                    <div className="flex mb-4">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-5 h-5 ${
+                            i < testimonial.rating
+                              ? "fill-emerald-500 text-emerald-500"
+                              : "fill-gray-200 text-gray-200"
+                          } mr-1`}
+                        />
+                      ))}
+                    </div>
 
-                  <p className="text-base text-gray-800 mb-8 italic leading-relaxed">
-                    "{testimonial.content}"
-                  </p>
+                    <p className="text-base text-gray-800 mb-8 italic leading-relaxed">
+                      "{testimonial.content}"
+                    </p>
 
-                  <div className="flex items-center">
-                    <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-14 h-14 rounded-full object-cover mr-4 border-2 border-amber-200"
-                    />
-                    <div>
-                      <h4 className="font-semibold text-gray-900 text-lg">
-                        {testimonial.name}
-                      </h4>
-                      <p className="text-sm text-amber-600">
-                        {testimonial.role}
-                      </p>
+                    <div className="flex items-center">
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mr-4 border-2 border-amber-200 shadow-sm">
+                        <span className="text-white font-semibold text-lg">
+                          {getInitials(testimonial.name)}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 text-lg">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {new Date(testimonial.createdAt || testimonial.date).toLocaleDateString()}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                </SwiperSlide>
+              ))}
+            </Swiper>
 
-          {/* Custom Navigation Buttons */}
-          <button className="swiper-button-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center border border-emerald-200 hover:bg-emerald-50 transition-colors">
-            <ChevronLeft className="w-5 h-5 text-emerald-600" />
-          </button>
-          <button className="swiper-button-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center border border-emerald-200 hover:bg-emerald-50 transition-colors">
-            <ChevronRight className="w-5 h-5 text-emerald-600" />
+            {/* Custom Navigation Buttons */}
+            <button className="swiper-button-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center border border-emerald-200 hover:bg-emerald-50 transition-colors">
+              <ChevronLeft className="w-5 h-5 text-emerald-600" />
+            </button>
+            <button className="swiper-button-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center border border-emerald-200 hover:bg-emerald-50 transition-colors">
+              <ChevronRight className="w-5 h-5 text-emerald-600" />
+            </button>
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-white rounded-xl border border-amber-100 mb-8">
+            <p className="text-gray-500">No reviews yet. Be the first to share your experience!</p>
+          </div>
+        )}
+
+        {/* Review Count and Stats */}
+        {testimonials.length > 0 && (
+          <div className="text-center mb-8">
+            <div className="text-sm text-gray-600">
+              <span className="font-semibold">{testimonials.length}</span> {testimonials.length === 1 ? 'review' : 'reviews'} • 
+              Average Rating: <span className="font-semibold">{(testimonials.reduce((acc, curr) => acc + curr.rating, 0) / testimonials.length).toFixed(1)}</span>/5
+            </div>
+          </div>
+        )}
+
+        {/* Write a Review Button - Below Reviews */}
+        <div className="text-center">
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg"
+          >
+            {showForm ? "Cancel" : "Write a Review"}
           </button>
         </div>
+
+        {/* Review Submission Form */}
+        {showForm && (
+          <div className="mt-8 bg-white rounded-xl shadow-lg p-6 md:p-8 border border-amber-100 relative">
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <h3 className="text-xl font-semibold text-amber-900 mb-6">Share Your Experience</h3>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors text-black"
+                  placeholder="Your name"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors text-black"
+                  placeholder="your.email@example.com"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Rating <span className="text-red-500">*</span>
+                </label>
+                <div className="flex items-center space-x-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => handleRatingClick(star)}
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      className="focus:outline-none"
+                    >
+                      <Star
+                        className={`w-8 h-8 cursor-pointer transition-colors ${
+                          star <= (hoverRating || formData.rating)
+                            ? "fill-emerald-500 text-emerald-500"
+                            : "fill-gray-200 text-gray-200"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                  <span className="ml-2 text-sm text-gray-600">
+                    {formData.rating} out of 5
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Your Review <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  name="content"
+                  value={formData.content}
+                  onChange={handleInputChange}
+                  rows="4"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors text-black"
+                  placeholder="Share your experience..."
+                  required
+                />
+              </div>
+
+              {submitMessage.text && (
+                <div className={`p-3 rounded-lg ${
+                  submitMessage.type === "success" 
+                    ? "bg-green-100 text-green-700 border border-green-200" 
+                    : "bg-red-100 text-red-700 border border-red-200"
+                }`}>
+                  {submitMessage.text}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`w-full py-3 px-4 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium ${
+                  isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                {isSubmitting ? "Submitting..." : "Submit Review"}
+              </button>
+            </form>
+          </div>
+        )}
       </div>
     </section>
   );

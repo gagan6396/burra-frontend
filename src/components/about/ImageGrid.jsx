@@ -376,7 +376,7 @@ export default function ResortGallery() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold mb-6">
             <Camera className="w-4 h-4" />
-            RESORT GALLERY
+           GALLERY
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#caa355] mb-6">
             Capture the Beauty

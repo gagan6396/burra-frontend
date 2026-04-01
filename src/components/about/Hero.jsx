@@ -31,13 +31,11 @@ const WelcomeSection = () => {
         {/* Content */}
         <div className="mt-8 space-y-6 text-gray-600 text-base sm:text-lg leading-relaxed text-left">
           <p>
-            Burra Bungalow is a historic house that has silently stored more than a century of memories, moods, and charm. It is tucked away among birdsongs and old stately deodars.
-            Burra Bungalows, the British word for "big," were previously home to plantation managers in the enormous Assamese tea estates where our parents worked. This is where the name originates. After our father retired from the tea gardens, our mother painstakingly and carefully rebuilt this house, which is a true work of love.
-            The cottage has been subtly updated for comfort, yet its vintage charm is still very much there. The house is filled with antique furniture and our mother's varied collection of paintings, artefacts, and curios, each of which has a backstory we would love to tell you.
+          Burra Bungalow is a historic boutique homestay Villa that has silently stored more than a century of memories, moods, and charm, offering serene mountain views and gentle sunrise views. It is tucked away in a private, peaceful setting among birdsongs and old stately deodars, yet remains easily accessible. Burra Bungalows, the British word for "big," were previously home to plantation managers in the enormous Assamese tea estates where our parents worked, and this is where the name originates. After our father retired from the tea gardens, our mother painstakingly and carefully rebuilt this house, which is a true work of love. The cottage has been subtly updated for comfort, yet its vintage charm is still very much there, now featuring a balcony with valley views, cozy bonfire & sit-out spaces, and thoughtfully curated interiors.
           </p>
 
           <p>
-            Burra Bungalow offers dedicated parking for up to three cars, a 24×7 water supply from a spring, good Wi-Fi connectivity, and a peaceful setting surrounded by rose bushes and trees. The house is single-level, fully carpeted, and comfortably accommodates up to six guests.
+          Burra Bungalow offers private parking available for up to three cars, a 24×7 water supply from a spring, strong WiFi for remote work, and support from a caretaker with optional home-cooked meals, all within a calm, green landscape of rose bushes and trees, making it one of the top five homestays for a relaxed getaway. The house is single-level, fully carpeted, and comfortably accommodates up to six guests.
           </p>
         </div>
       </div>

@@ -17,10 +17,48 @@ export default function Navbar() {
 
   const handleLinkClick = (href) => {
     setIsOpen(false);
-    // Navigate to the page
     navigate(href);
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const scrollToTestimonials = () => {
+    console.log("Attempting to scroll to testimonials...");
+    console.log("Current path:", location.pathname);
+    
+    // Try to find the element with correct ID
+    let element = document.getElementById('testimonial');
+    
+    if (!element) {
+      console.log("Element with id 'testimonial' not found, trying alternative...");
+      element = document.querySelector('#testimonial');
+    }
+    
+    if (element) {
+      console.log("Element found, scrolling...");
+      // Add offset for fixed navbar
+      const offset = 80; // Height of navbar
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    } else {
+      console.error("Testimonials section not found in DOM");
+      console.log("Available sections with ids:", document.querySelectorAll('[id]'));
+      alert("Testimonials section not found. Please refresh the page and try again.");
+    }
+  };
+
+  const handleAddReviewClick = () => {
+    setIsOpen(false);
+    console.log("Add Review clicked, current path:", location.pathname);
+    
+    // Small delay to ensure DOM is ready
+    setTimeout(() => {
+      scrollToTestimonials();
+    }, 100);
   };
 
   return (
@@ -30,7 +68,6 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0 transform hover:scale-105 transition-all duration-300">
             <Link to="/" className="flex items-center space-x-3">
-              {/* Fixed logo - added alt text and proper img tag */}
               <img src="/logo.png" alt="Burra Bungalow Logo" className="h-25 w-auto" />
             </Link>
           </div>
@@ -55,6 +92,14 @@ export default function Navbar() {
                 />
               </Link>
             ))}
+            
+            {/* Desktop Add a Review Button */}
+            <button
+              onClick={handleAddReviewClick}
+              className="ml-4 px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold tracking-wide rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+            >
+              Add a Review
+            </button>
           </div>
 
           {/* Mobile menu button */}
@@ -113,7 +158,6 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
                 className="flex items-center space-x-3"
               >
-                {/* Fixed mobile logo */}
                 <img src="/logo.png" alt="Burra Bungalow Logo" className="h-10 w-auto" />
                 <div>
                   <h2 className="text-lg font-bold text-amber-900">
@@ -156,6 +200,14 @@ export default function Navbar() {
               >
                 Book Your Stay
               </Link>
+            </div>
+            <div className="pt-4">
+              <button
+                onClick={handleAddReviewClick}
+                className="block w-full bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg text-center"
+              >
+                Add a Review
+              </button>
             </div>
           </div>
 

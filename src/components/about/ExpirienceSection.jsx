@@ -36,15 +36,15 @@ const experiences = [
       "Wake up to misty mornings, fresh mountain air, and landscapes that soothe the soul while connecting you to nature's rhythm.",
     icon: Mountain,
     color: "emerald",
-    features: ["Mountain Views", "Forest Trails", "Fresh Air"]
+    features: ["Mountain view stay", "Forest Trails", "Fresh Air"]
   },
   {
     title: "Personalized Experiences",
     description:
-      "From curated stays to intimate moments, every experience is thoughtfully shaped around your preferences and desires.",
+      "Every experience is thoughtfully shaped around your preferences and desires.",
     icon: Heart,
     color: "amber",
-    features: ["Custom Itineraries", "Special Occasions", "Tailored Service"]
+    features: [ "Peaceful hill retreat", "Work from mountains","Nature getaway Uttarakhand"]
   },
 ];
 
@@ -96,8 +96,7 @@ const ExperienceSection = () => {
             <span className="block text-emerald-600">Perfect Escape</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            More than just a stay, we offer transformative experiences crafted around comfort, 
-            nature, and moments that create lasting memories long after you leave.
+          More than just a stay, this boutique homestay villa offers private, peaceful experiences shaped by comfort, nature, and serene mountain and sunrise views, creating lasting memories long after you leave.
           </p>
         </div>
 

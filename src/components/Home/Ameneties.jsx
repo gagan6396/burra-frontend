@@ -11,6 +11,7 @@ import {
   TreePine,
   Home,
   Wifi,
+  Cctv
 } from "lucide-react";
 
 const AmenitiesSection = () => {
@@ -24,6 +25,7 @@ const AmenitiesSection = () => {
         { icon: Flame, title: "Room Heater", description: "Cozy warmth in winters" },
         { icon: Tv, title: "Smart TV", description: "Entertainment at your fingertips" },
         { icon: Droplets, title: "Hot Water", description: "24/7 hot water supply" },
+        { icon: Cctv, title: "Outdoor CCTV Cameras", description: "External CCTV cameras on the property" },
         { icon: Coffee, title: "Tea/Coffee Setup", description: "Premium beverage station" },
         { icon: Zap, title: "Electric Kettle", description: "Quick and convenient" },
         { icon: Bath, title: "Private Bathroom", description: "Luxurious bath experience" },
@@ -43,6 +45,7 @@ const AmenitiesSection = () => {
         { icon: Wifi, title: "WiFi", description: "High-speed internet" },
         // { icon: Coffee, title: "Tea/Coffee Setup", description: "Premium beverage station" },
         { icon: Bath, title: "Private Bathroom", description: "Luxurious bath experience" },
+        { icon: Cctv, title: "Outdoor CCTV Cameras", description: "External CCTV cameras on the property" },
         // { icon: Zap, title: "Electric Kettle", description: "Quick and convenient" },
         { icon: TreePine, title: "Garden View", description: "Scenic outdoor views" },
         { icon: BedDouble, title: "Quality Linen", description: "Comfortable bedding" },
