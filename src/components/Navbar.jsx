@@ -21,44 +21,28 @@ export default function Navbar() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const scrollToTestimonials = () => {
-    console.log("Attempting to scroll to testimonials...");
-    console.log("Current path:", location.pathname);
+  const scrollToTestimonialsAndOpenForm = () => {
+    console.log("Attempting to scroll to review form...");
     
-    // Try to find the element with correct ID
-    let element = document.getElementById('testimonial');
+    // Close mobile menu if open
+    setIsOpen(false);
     
-    if (!element) {
-      console.log("Element with id 'testimonial' not found, trying alternative...");
-      element = document.querySelector('#testimonial');
-    }
-    
-    if (element) {
-      console.log("Element found, scrolling...");
-      // Add offset for fixed navbar
-      const offset = 80; // Height of navbar
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-      
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+    // If not on home page, navigate to home first
+    if (location.pathname !== '/') {
+      navigate('/');
+      // Wait for navigation and DOM to update before scrolling
+      setTimeout(() => {
+        scrollAndOpenForm();
+      }, 500);
     } else {
-      console.error("Testimonials section not found in DOM");
-      console.log("Available sections with ids:", document.querySelectorAll('[id]'));
-      alert("Testimonials section not found. Please refresh the page and try again.");
+      scrollAndOpenForm();
     }
   };
 
-  const handleAddReviewClick = () => {
-    setIsOpen(false);
-    console.log("Add Review clicked, current path:", location.pathname);
-    
-    // Small delay to ensure DOM is ready
-    setTimeout(() => {
-      scrollToTestimonials();
-    }, 100);
+  const scrollAndOpenForm = () => {
+    // Dispatch custom event to open the form
+    window.dispatchEvent(new CustomEvent('openReviewForm'));
+    console.log("Dispatched openReviewForm event");
   };
 
   return (
@@ -95,7 +79,7 @@ export default function Navbar() {
             
             {/* Desktop Add a Review Button */}
             <button
-              onClick={handleAddReviewClick}
+              onClick={scrollToTestimonialsAndOpenForm}
               className="ml-4 px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold tracking-wide rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
             >
               Add a Review
@@ -203,7 +187,7 @@ export default function Navbar() {
             </div>
             <div className="pt-4">
               <button
-                onClick={handleAddReviewClick}
+                onClick={scrollToTestimonialsAndOpenForm}
                 className="block w-full bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg text-center"
               >
                 Add a Review
@@ -218,3 +202,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

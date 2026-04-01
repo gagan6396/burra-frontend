@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -18,14 +18,43 @@ const TestimonialsCarousel = () => {
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState({ type: "", text: "" });
+  
+  const formRef = useRef(null);
 
   const API_BASE_URL = 'https://burrabungalow.com/api';
 
   // Fetch testimonials from backend on component mount
   useEffect(() => {
     fetchTestimonials();
-    // Log when component mounts to verify
-    console.log("TestimonialsCarousel mounted with id:", document.getElementById('testimonial'));
+    console.log("TestimonialsCarousel mounted");
+    
+    // Add event listener for opening the review form from navbar
+    const handleOpenReviewForm = () => {
+      console.log("Received openReviewForm event, opening form...");
+      setShowForm(true);
+      
+      // Small delay to ensure form is rendered before scrolling
+      setTimeout(() => {
+        if (formRef.current) {
+          // Add offset for fixed navbar
+          const offset = 80; // Height of navbar
+          const elementPosition = formRef.current.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    };
+    
+    window.addEventListener('openReviewForm', handleOpenReviewForm);
+    
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('openReviewForm', handleOpenReviewForm);
+    };
   }, []);
 
   // Fetch testimonials from backend
@@ -142,9 +171,9 @@ const TestimonialsCarousel = () => {
 
   return (
     <section 
-      id="testimonial"  // CHANGED: Fixed from "test" to "testimonial"
+      id="testimonial"
       className="w-full bg-gradient-to-br from-amber-50 via-white to-stone-50 py-16 px-4 md:px-8"
-      style={{ scrollMarginTop: "80px" }}  // Prevents navbar from covering the section
+      style={{ scrollMarginTop: "80px" }}
     >
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
@@ -250,9 +279,13 @@ const TestimonialsCarousel = () => {
           </button>
         </div>
 
-        {/* Review Submission Form */}
+        {/* Review Submission Form - Added ID here */}
         {showForm && (
-          <div className="mt-8 bg-white rounded-xl shadow-lg p-6 md:p-8 border border-amber-100 relative">
+          <div 
+            id="review-form"
+            ref={formRef}
+            className="mt-8 bg-white rounded-xl shadow-lg p-6 md:p-8 border border-amber-100 relative scroll-mt-20"
+          >
             <button
               onClick={() => setShowForm(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
