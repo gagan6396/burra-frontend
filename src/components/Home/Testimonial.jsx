@@ -23,21 +23,17 @@ const TestimonialsCarousel = () => {
 
   const API_BASE_URL = 'https://burrabungalow.com/api';
 
-  // Fetch testimonials from backend on component mount
   useEffect(() => {
     fetchTestimonials();
     console.log("TestimonialsCarousel mounted");
     
-    // Add event listener for opening the review form from navbar
     const handleOpenReviewForm = () => {
       console.log("Received openReviewForm event, opening form...");
       setShowForm(true);
       
-      // Small delay to ensure form is rendered before scrolling
       setTimeout(() => {
         if (formRef.current) {
-          // Add offset for fixed navbar
-          const offset = 80; // Height of navbar
+          const offset = 80;
           const elementPosition = formRef.current.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - offset;
           
@@ -51,13 +47,11 @@ const TestimonialsCarousel = () => {
     
     window.addEventListener('openReviewForm', handleOpenReviewForm);
     
-    // Cleanup event listener on component unmount
     return () => {
       window.removeEventListener('openReviewForm', handleOpenReviewForm);
     };
   }, []);
 
-  // Fetch testimonials from backend
   const fetchTestimonials = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/testimonials`);
@@ -92,24 +86,26 @@ const TestimonialsCarousel = () => {
     setSubmitMessage({ type: "", text: "" });
 
     // Validate form
-    if (!formData.name || !formData.email || !formData.content) {
+    if (!formData.name || !formData.content) {
       setSubmitMessage({ 
         type: "error", 
-        text: "Please fill in all required fields (Name, Email, and Review)" 
+        text: "Please fill in all required fields (Name and Review)" 
       });
       setIsSubmitting(false);
       return;
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setSubmitMessage({ 
-        type: "error", 
-        text: "Please enter a valid email address" 
-      });
-      setIsSubmitting(false);
-      return;
+    // Validate email format only if provided
+    if (formData.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setSubmitMessage({ 
+          type: "error", 
+          text: "Please enter a valid email address" 
+        });
+        setIsSubmitting(false);
+        return;
+      }
     }
 
     try {
@@ -132,7 +128,6 @@ const TestimonialsCarousel = () => {
         text: "Thank you for your review! It has been added successfully." 
       });
 
-      // Reset form
       setFormData({
         name: "",
         email: "",
@@ -140,10 +135,8 @@ const TestimonialsCarousel = () => {
         content: ""
       });
 
-      // Refresh testimonials
       await fetchTestimonials();
 
-      // Close form after 2 seconds
       setTimeout(() => {
         setShowForm(false);
         setSubmitMessage({ type: "", text: "" });
@@ -159,7 +152,6 @@ const TestimonialsCarousel = () => {
     }
   };
 
-  // Get initials from name for avatar
   const getInitials = (name) => {
     return name
       .split(' ')
@@ -269,7 +261,7 @@ const TestimonialsCarousel = () => {
           </div>
         )}
 
-        {/* Write a Review Button - Below Reviews */}
+        {/* Write a Review Button */}
         <div className="text-center">
           <button
             onClick={() => setShowForm(!showForm)}
@@ -279,7 +271,7 @@ const TestimonialsCarousel = () => {
           </button>
         </div>
 
-        {/* Review Submission Form - Added ID here */}
+        {/* Review Submission Form */}
         {showForm && (
           <div 
             id="review-form"
@@ -313,7 +305,7 @@ const TestimonialsCarousel = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email <span className="text-red-500">*</span>
+                  Email
                 </label>
                 <input
                   type="email"
@@ -321,8 +313,7 @@ const TestimonialsCarousel = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors text-black"
-                  placeholder="your.email@example.com"
-                  required
+                  placeholder="your.email@example.com (optional)"
                 />
               </div>
 
