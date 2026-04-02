@@ -40,7 +40,7 @@ const HeroSection = () => {
   const mainVideoRef = useRef(null);
   const modalRef = useRef(null);
 
-  const BASE_URLL = "http://localhost:5001";
+  const BASE_URLL = "https://burrabungalow.com";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -121,7 +121,7 @@ const HeroSection = () => {
       newErrors.email = "Email is invalid";
     }
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    if (!formData.message.trim()) newErrors.message = "Message is required";
+    // Message is now optional - removed validation
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -598,7 +598,7 @@ const HeroSection = () => {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Special Requests *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Special Requests (Optional)</label>
                         <div className="relative">
                           <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                           <textarea 
@@ -606,10 +606,9 @@ const HeroSection = () => {
                             value={formData.message} 
                             onChange={handleChange} 
                             rows="3" 
-                            placeholder="Tell us about any special requirements..."
-                            className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-500 text-gray-900 ${errors.message ? "border-red-300 bg-red-50" : "border-gray-200"}`} 
+                            placeholder="Tell us about any special requirements... (optional)"
+                            className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-500 text-gray-900" 
                           />
-                          {errors.message && <div className="flex items-center gap-1 mt-1 text-red-600 text-sm"><AlertCircle className="w-4 h-4" />{errors.message}</div>}
                         </div>
                       </div>
 
