@@ -229,7 +229,7 @@ export default function ContactEnquiry() {
 
               <div className="mt-8 rounded-2xl overflow-hidden border border-gray-200">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3442.753109420587!2d78.0850603743707!3d30.357965803650256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3908d7d56548dbfd%3A0xe1982a289b663b72!2sDream%20Byte%20Solutions!5e0!3m2!1sen!2sin!4v1767006844998!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d110064.82391741156!2d77.94403694335935!3d30.449543400000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3908d1618298da5d%3A0x937c8a04fb1eadda!2sBurra%20Bungalow!5e0!3m2!1sen!2sin!4v1775128763988!5m2!1sen!2sin"
                   width="100%"
                   height="300"
                   title="Location Map"
