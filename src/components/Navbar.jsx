@@ -68,6 +68,41 @@ export default function Navbar() {
     }
   };
 
+  const scrollToTestimonials = () => {
+    console.log("Attempting to scroll to guest reviews...");
+    
+    // Close mobile menu if open
+    setIsOpen(false);
+    
+    // If not on home page, navigate to home first
+    if (location.pathname !== '/') {
+      navigate('/');
+      // Wait for navigation and DOM to update before scrolling
+      setTimeout(() => {
+        scrollToReviews();
+      }, 500);
+    } else {
+      scrollToReviews();
+    }
+  };
+
+  const scrollToReviews = () => {
+    const testimonialSection = document.getElementById('testimonial');
+    if (testimonialSection) {
+      const offset = 80; // Height of navbar
+      const elementPosition = testimonialSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      console.log("Scrolled to guest reviews section");
+    } else {
+      console.log("Guest reviews section not found");
+    }
+  };
+
   const scrollAndOpenForm = () => {
     // Dispatch custom event to open the form
     window.dispatchEvent(new CustomEvent('openReviewForm'));
@@ -181,10 +216,18 @@ export default function Navbar() {
               );
             })}
             
+            {/* Desktop Guest Reviews Button */}
+            <button
+              onClick={scrollToTestimonials}
+              className="ml-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold tracking-wide rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+            >
+              Guest Reviews
+            </button>
+
             {/* Desktop Add a Review Button */}
             <button
               onClick={scrollToTestimonialsAndOpenForm}
-              className="ml-4 px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold tracking-wide rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+              className="ml-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold tracking-wide rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
             >
               Add a Review
             </button>
@@ -304,6 +347,26 @@ export default function Navbar() {
               );
             })}
 
+            {/* Mobile Guest Reviews Button */}
+            <div className="pt-2">
+              <button
+                onClick={scrollToTestimonials}
+                className="block w-full bg-amber-600 hover:bg-amber-700 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg text-center"
+              >
+                Guest Reviews
+              </button>
+            </div>
+
+            {/* Mobile Add a Review Button */}
+            <div className="pt-2">
+              <button
+                onClick={scrollToTestimonialsAndOpenForm}
+                className="block w-full bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg text-center"
+              >
+                Add a Review
+              </button>
+            </div>
+
             {/* Mobile CTA */}
             <div className="pt-4">
               <Link 
@@ -313,14 +376,6 @@ export default function Navbar() {
               >
                 Book Your Stay
               </Link>
-            </div>
-            <div className="pt-4">
-              <button
-                onClick={scrollToTestimonialsAndOpenForm}
-                className="block w-full bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg text-center"
-              >
-                Add a Review
-              </button>
             </div>
           </div>
 
