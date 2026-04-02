@@ -23,6 +23,8 @@ const TestimonialsCarousel = () => {
 
   const API_BASE_URL = 'https://burrabungalow.com/api';
 
+  
+
   useEffect(() => {
     fetchTestimonials();
     console.log("TestimonialsCarousel mounted");
