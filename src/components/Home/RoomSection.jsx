@@ -44,9 +44,10 @@ const rooms = [
       "Our spacious private villa in Mussoorie is a boutique homestay offering the perfect blend of comfort, luxury, and peaceful surroundings, recognized among the top five homestays and ideal for a family stay in Mussoorie. This 3 bedroom villa in Mussoorie features elegant ensuite bedrooms with heated blankets and generous living spaces designed for relaxation. Enjoy stunning sunrise views and serene mountain views from the eastern and western patios, perfect for quiet mornings and evenings. The property is private, easily accessible, and includes private parking, making it a seamless getaway. Whether you're looking for a Mussoorie homestay or a cozy cottage with view, this villa offers a warm and memorable retreat.",
     features: [
       { icon: Bed, text: "Three bedrooms" },
+      { icon: Bath, text: "Three attached Bathroom" },
       { icon: Cctv, text: "External Cameras" },
       { icon: Users, text: "Accommodates up to 6 adults" },
-      { icon: Bath, text: "Three attached Bathroom" },
+      { icon: Bath, text: "On Suite Bathrooms" },
       { icon: Coffee, text: "Living room cum dinning area" },
     ],
     specs: {
@@ -78,9 +79,10 @@ const rooms = [
       "Experience authentic luxury in our handcrafted annexe, thoughtfully designed to blend natural charm with refined comfort. The annexe features two beautifully crafted bedrooms with heated blankets, ensuring a warm and cozy stay even during cooler mountain nights. Step out onto the private gallery to take in panoramic forest views, where the sights and sounds of nature create a deeply calming atmosphere. Inside, elegant pinewood interiors, warm textures, and carefully curated details enhance the sense of quiet sophistication.",
     features: [
       { icon: Bed, text: "Two bedrooms" },
+      { icon: Bath, text: "Attached bathroom" },
       { icon: Cctv, text: "External Cameras" },
       { icon: Users, text: "Perfect for families" },
-      { icon: Bath, text: "Attached bathroom" },
+      { icon: Bath, text: "On Suite Barhrooms" },
       { icon: Utensils, text: "Sittng cum dinning area" },
     ],
     specs: {

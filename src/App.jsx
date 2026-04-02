@@ -7,6 +7,9 @@ import ImageSlider from './components/ImageSlider'
 import Homepage from './components/Home/Homepage'
 import About from './components/about/About'
 import Contact from './components/contact/Contact'
+import BurraBungalow from './components/properties/BurraBungalow'
+import Annexe from './components/properties/Annexe'
+import PlacesNearby from './components/properties/PlacesNearby'
 
 function App() {
   return (
@@ -31,6 +34,9 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/about-us" element={<About />} />
         <Route path="/contact-us" element={<Contact />} />
+        <Route path="/burra-bungalow" element={<BurraBungalow />} />
+        <Route path="/annexe" element={<Annexe />} />
+        <Route path="/places-nearby" element={<PlacesNearby />} />
       </Routes>
     </>
   )
