@@ -97,14 +97,14 @@ export default function ContactEnquiry() {
 
   /* ✅ GROUPED CONTACT INFO */
   const contactInfo = [
-    {
-      icon: Phone,
-      title: "For Reservations",
-      items: [
-        { text: "+91 9810301645", href: "tel:+919810301645" },
-        { text: "+91 9845155496", href: "tel:+919845155496" },
-      ],
-    },
+    // {
+    //   icon: Phone,
+    //   title: "For Reservations",
+    //   items: [
+    //     { text: "+91 9810301645", href: "tel:+919810301645" },
+    //     { text: "+91 9845155496", href: "tel:+919845155496" },
+    //   ],
+    // },
     {
       icon: Mail,
       title: "Email Inquiries",
