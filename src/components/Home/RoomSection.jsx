@@ -37,6 +37,7 @@ import {
   Flame,
 } from "lucide-react";
 import { useRef } from "react";
+
 const rooms = [
   {
     title: "Burra Bungalow",
@@ -44,10 +45,9 @@ const rooms = [
       "Our spacious private villa in Mussoorie is a boutique homestay offering the perfect blend of comfort, luxury, and peaceful surroundings, recognized among the top five homestays and ideal for a family stay in Mussoorie. This 3 bedroom villa in Mussoorie features elegant ensuite bedrooms with heated blankets and generous living spaces designed for relaxation. Enjoy stunning sunrise views and serene mountain views from the eastern and western patios, perfect for quiet mornings and evenings. The property is private, easily accessible, and includes private parking, making it a seamless getaway. Whether you're looking for a Mussoorie homestay or a cozy cottage with view, this villa offers a warm and memorable retreat.",
     features: [
       { icon: Bed, text: "Three bedrooms" },
-      { icon: Bath, text: "Three attached Bathroom" },
       { icon: Cctv, text: "External Cameras" },
       { icon: Users, text: "Accommodates up to 6 adults" },
-      { icon: Bath, text: "On Suite Bathrooms" },
+      { icon: Bath, text: "Three attached Bathroom" },
       { icon: Coffee, text: "Living room cum dinning area" },
     ],
     specs: {
@@ -72,6 +72,8 @@ const rooms = [
       "/12.webp",
     ],
     badge: "Most Popular",
+    checkIn: "2:00 PM",
+    checkOut: "12:00 PM",
   },
   {
     title: "Annexe",
@@ -79,10 +81,9 @@ const rooms = [
       "Experience authentic luxury in our handcrafted annexe, thoughtfully designed to blend natural charm with refined comfort. The annexe features two beautifully crafted bedrooms with heated blankets, ensuring a warm and cozy stay even during cooler mountain nights. Step out onto the private gallery to take in panoramic forest views, where the sights and sounds of nature create a deeply calming atmosphere. Inside, elegant pinewood interiors, warm textures, and carefully curated details enhance the sense of quiet sophistication.",
     features: [
       { icon: Bed, text: "Two bedrooms" },
-      { icon: Bath, text: "Attached bathroom" },
       { icon: Cctv, text: "External Cameras" },
       { icon: Users, text: "Perfect for families" },
-      { icon: Bath, text: "On Suite Barhrooms" },
+      { icon: Bath, text: "Attached bathroom" },
       { icon: Utensils, text: "Sittng cum dinning area" },
     ],
     specs: {
@@ -108,6 +109,8 @@ const rooms = [
       "/31.webp",
     ],
     badge: "Premium",
+    checkIn: "2:00 PM",
+    checkOut: "12:00 PM",
   },
 ];
 
@@ -254,7 +257,7 @@ const RoomsSection = () => {
       newErrors.email = "Email is invalid";
     }
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    // Message is now optional - removed validation
+    if (!formData.message.trim()) newErrors.message = "Message is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -307,21 +310,21 @@ const RoomsSection = () => {
 
   /* ✅ GROUPED CONTACT INFO */
   const contactInfo = [
-    // {
-    //   icon: Phone,
-    //   title: "For Reservations",
-    //   items: [
-    //     { text: "+91 9810301645", href: "tel:+919810301645" },
-    //     { text: "+91 9845155496", href: "tel:+919845155496" },
-    //   ],
-    // },
+    {
+      icon: Phone,
+      title: "For Reservations",
+      items: [
+        { text: "+91 9810301645", href: "tel:+919810301645" },
+        { text: "+91 9845155496", href: "tel:+919845155496" },
+      ],
+    },
     {
       icon: Mail,
       title: "Email Inquiries",
       items: [
         {
-          text: "mrinalinipahwa@gmail.com",
-          href: "mailto:mrinalinipahwa@gmail.com",
+          text: "mrinalinipahawa@gmail.com",
+          href: "mailto:mrinalinipahawa@gmail.com",
         },
         {
           text: "rageshrir@gmail.com",
@@ -511,6 +514,23 @@ const RoomsSection = () => {
                       </div>
                     );
                   })}
+                </div>
+
+                {/* Check-in/Check-out Timing Box - Burra Bungalow */}
+                <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                      <Clock className="w-5 h-5 text-amber-700" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">Check-in & Check-out</p>
+                      <p className="text-sm text-gray-700">
+                        Check-in: <span className="font-medium">{rooms[0].checkIn}</span> | 
+                        Check-out: <span className="font-medium">{rooms[0].checkOut}</span>
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">Early check-in subject to availability</p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Action Buttons */}
@@ -798,7 +818,7 @@ const RoomsSection = () => {
                           "Dinner at home while unwinding"
                         ].map((item, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <div className="w-1.5 h-1.5 bg-amber-600 rounded-full mt-1.5"></div>
+                            <div className="w-1.5 h-1.5 bg-amber-600 rounded-full mt=1.5"></div>
                             <span className="text-sm text-gray-700">{item}</span>
                           </li>
                         ))}
@@ -994,6 +1014,23 @@ const RoomsSection = () => {
                       </div>
                     );
                   })}
+                </div>
+
+                {/* Check-in/Check-out Timing Box - Annexe */}
+                <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                      <Clock className="w-5 h-5 text-amber-700" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">Check-in & Check-out</p>
+                      <p className="text-sm text-gray-700">
+                        Check-in: <span className="font-medium">{rooms[1].checkIn}</span> | 
+                        Check-out: <span className="font-medium">{rooms[1].checkOut}</span>
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">Early check-in subject to availability</p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Action Buttons */}
@@ -1388,8 +1425,22 @@ const RoomsSection = () => {
                         </div>
                       </div>
 
+                      {/* Check-in/Check-out Time Info */}
+                      <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                        <div className="flex items-center gap-3">
+                          <Clock className="w-5 h-5 text-amber-600" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">Check-in & Check-out Timings</p>
+                            <p className="text-sm text-gray-600">
+                              Check-in: <span className="font-semibold">2:00 PM</span> | Check-out: <span className="font-semibold">12:00 PM (Noon)</span>
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">Early check-in and late check-out subject to availability</p>
+                          </div>
+                        </div>
+                      </div>
+
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Special Requests (Optional)</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Special Requests *</label>
                         <div className="relative">
                           <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                           <textarea 
@@ -1397,9 +1448,10 @@ const RoomsSection = () => {
                             value={formData.message} 
                             onChange={handleChange} 
                             rows="3" 
-                            placeholder="Tell us about any special requirements... (optional)"
-                            className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-500 text-gray-900" 
+                            placeholder="Tell us about any special requirements..."
+                            className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-500 text-gray-900 ${errors.message ? "border-red-300 bg-red-50" : "border-gray-200"}`} 
                           />
+                          {errors.message && <div className="flex items-center gap-1 mt-1 text-red-600 text-sm"><AlertCircle className="w-4 h-4" />{errors.message}</div>}
                         </div>
                       </div>
 

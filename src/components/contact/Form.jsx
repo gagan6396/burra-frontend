@@ -13,9 +13,10 @@ import {
   Users,
   Award,
   Home,
+  Clock,
 } from "lucide-react";
 
-const BASE_URLL = "http://localhost:5001"
+const BASE_URLL = "https://burrabungalow.com"
 
 export default function ContactEnquiry() {
   console.log("YETEYEYEY",BASE_URLL)
@@ -27,7 +28,7 @@ export default function ContactEnquiry() {
     checkOut: "",
     guests: "2",
     message: "",
-    roomType: "Burra Bungalow", // Added room type field
+    roomType: "Burra Bungalow",
   });
 
   const [errors, setErrors] = useState({});
@@ -43,7 +44,6 @@ export default function ContactEnquiry() {
       newErrors.email = "Email is invalid";
     }
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    // Message is now optional - removed validation
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -84,9 +84,9 @@ export default function ContactEnquiry() {
           checkOut: "",
           guests: "2",
           message: "",
-          roomType: "Burra Bungalow", // Reset room type
+          roomType: "Burra Bungalow",
         });
-      }, 10000); // Changed from 3000 to 10000 (10 seconds)
+      }, 10000);
     } catch (error) {
       console.error("Form submit error:", error);
       alert("Failed to submit enquiry. Please try again.");
@@ -95,16 +95,7 @@ export default function ContactEnquiry() {
     }
   };
 
-  /* ✅ GROUPED CONTACT INFO */
   const contactInfo = [
-    // {
-    //   icon: Phone,
-    //   title: "For Reservations",
-    //   items: [
-    //     { text: "+91 9810301645", href: "tel:+919810301645" },
-    //     { text: "+91 9845155496", href: "tel:+919845155496" },
-    //   ],
-    // },
     {
       icon: Mail,
       title: "Email Inquiries",
@@ -137,7 +128,6 @@ export default function ContactEnquiry() {
     },
   ];
 
-  /* ✅ SUCCESS STATE */
   if (isSubmitted) {
     return (
       <div className="bg-gradient-to-br from-emerald-50 via-white to-blue-50 py-24 px-4">
@@ -167,7 +157,6 @@ export default function ContactEnquiry() {
     );
   }
 
-  /* ✅ MAIN UI — UNCHANGED */
   return (
     <div className="bg-gradient-to-br from-gray-50 via-white to-emerald-50 py-24 px-4">
       <div className="max-w-7xl mx-auto">
@@ -245,9 +234,8 @@ export default function ContactEnquiry() {
                 Make a Reservation
               </h3>
 
-              {/* ⬇️ ALL YOUR INPUTS — UPDATED ⬇️ */}
               <div className="space-y-6">
-                {/* Room Type Dropdown - ADDED */}
+                {/* Room Type Dropdown */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Room Type *</label>
                   <div className="relative">
@@ -323,39 +311,56 @@ export default function ContactEnquiry() {
                   </div>
                 </div>
 
+                {/* ✅ CHECK-IN/CHECK-OUT TIMING BOX - NOW VISIBLE */}
+                <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Clock className="w-5 h-5 text-amber-700" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">Check-in & Check-out Timings</p>
+                      <p className="text-sm text-gray-700">
+                        Check-in: <span className="font-medium text-amber-800">2:00 PM</span> | 
+                        Check-out: <span className="font-medium text-amber-800">12:00 PM (Noon)</span>
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">Early check-in and late check-out subject to availability</p>
+                    </div>
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Special Requests (Optional)</label>
                   <div className="relative">
                     <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                     <textarea name="message" value={formData.message} onChange={handleChange} rows="4" placeholder="Tell us about any special requirements... (optional)"
-                      className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-500 text-gray-900 border-gray-200`} />
+                      className="w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-500 text-gray-900 border-gray-200" />
                   </div>
                 </div>
 
-               </div>
-              {/* button */}
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl transition-all hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Send Booking Request
-                  </>
-                )}
-              </button>
+                {/* button */}
+                <button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl transition-all hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      Send Booking Request
+                    </>
+                  )}
+                </button>
 
-              <div className="bg-gray-50 rounded-xl p-4 text-center">
-                <p className="text-sm text-gray-600 flex items-center justify-center gap-1">
-                  <Award className="w-4 h-4" /> Your information is secure
-                </p>
+                <div className="bg-gray-50 rounded-xl p-4 text-center">
+                  <p className="text-sm text-gray-600 flex items-center justify-center gap-1">
+                    <Award className="w-4 h-4" /> Your information is secure
+                  </p>
+                </div>
               </div>
             </div>
           </div>
