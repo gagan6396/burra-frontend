@@ -40,8 +40,8 @@ export default function Footer() {
       icon: Mail,
       items: [
         {
-          text: "mrinalinipahawa@gmail.com",
-          href: "mailto:mrinalinipahawa@gmail.com",
+          text: "mrinalinipahwa@gmail.com",
+          href: "mailto:mrinalinipahwa@gmail.com",
         },
         {
           text: "rageshrir@gmail.com",

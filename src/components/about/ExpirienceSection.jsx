@@ -28,7 +28,7 @@ const experiences = [
       "Refined comfort blended with heartfelt hospitality that feels personal, creating an atmosphere of elegant intimacy.",
     icon: Sparkles,
     color: "amber",
-    features: ["Personal Butler", "Premium Amenities", "Warm Service"]
+    features: ["Househelp", "Premium Amenities", "Warm Service"]
   },
   {
     title: "Nature-First Living",
