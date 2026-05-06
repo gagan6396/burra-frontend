@@ -35,6 +35,7 @@ import {
   Award,
   Cctv,
   Flame,
+  Tag,
 } from "lucide-react";
 import { useRef } from "react";
 
@@ -55,7 +56,8 @@ const rooms = [
       balcony: "12 ft x 5 ft private patios",
       view: "Garden & Mountain Views",
     },
-    price: "₹8,500",
+    price: "₹23,000",
+    priceNote: "Inclusive of breakfast & taxes",
     rating: 4.8,
     images: [
       "/1.webp",
@@ -92,6 +94,7 @@ const rooms = [
       view: "Forest & Valley Views",
     },
     price: "₹12,000",
+    priceNote: "Inclusive of breakfast & taxes",
     rating: 4.9,
     images: [
       "/20.webp",
@@ -131,7 +134,7 @@ const RoomsSection = () => {
     checkOut: "",
     guests: "2",
     message: "",
-    roomType: "Burra Bungalow", // Default room type
+    roomType: "Burra Bungalow",
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -140,15 +143,14 @@ const RoomsSection = () => {
 
   const BASE_URLL = "https://burrabungalow.com";
 
-  // Handle responsive thumbnail count
   useEffect(() => {
     const updateThumbnailCount = () => {
       if (window.innerWidth < 640) {
-        setThumbnailsToShow(3); // Mobile
+        setThumbnailsToShow(3);
       } else if (window.innerWidth < 1024) {
-        setThumbnailsToShow(4); // Tablet
+        setThumbnailsToShow(4);
       } else {
-        setThumbnailsToShow(5); // Desktop
+        setThumbnailsToShow(5);
       }
     };
 
@@ -157,7 +159,6 @@ const RoomsSection = () => {
     return () => window.removeEventListener('resize', updateThumbnailCount);
   }, []);
 
-  // Close modal when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -165,7 +166,6 @@ const RoomsSection = () => {
       }
     };
 
-    // Close modal on Escape key
     const handleEscapeKey = (event) => {
       if (event.key === "Escape") {
         setIsModalOpen(false);
@@ -175,9 +175,9 @@ const RoomsSection = () => {
     if (isModalOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("keydown", handleEscapeKey);
-      document.body.style.overflow = "hidden"; // Prevent scrolling
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto"; // Restore scrolling
+      document.body.style.overflow = "auto";
     }
 
     return () => {
@@ -270,6 +270,10 @@ const RoomsSection = () => {
     }
   };
 
+  const handleRoomTypeSelection = (roomType) => {
+    setFormData((prev) => ({ ...prev, roomType: roomType }));
+  };
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
@@ -298,7 +302,7 @@ const RoomsSection = () => {
           message: "",
           roomType: "Burra Bungalow",
         });
-        closeModal(); // Close modal after successful submission
+        closeModal();
       }, 3000);
     } catch (error) {
       console.error("Form submit error:", error);
@@ -308,7 +312,13 @@ const RoomsSection = () => {
     }
   };
 
-  /* ✅ GROUPED CONTACT INFO */
+  /* Pricing data for modal reference */
+  const pricingOptions = [
+    { label: "Burra Bungalow", price: "₹23,000", note: "Incl. breakfast & taxes" },
+    { label: "Annexe", price: "₹12,000", note: "Incl. breakfast & taxes" },
+    { label: "Burra Bungalow + Annexe Combo", price: "₹30,000", note: "Incl. breakfast & taxes" },
+  ];
+
   const contactInfo = [
     {
       icon: Phone,
@@ -323,8 +333,8 @@ const RoomsSection = () => {
       title: "Email Inquiries",
       items: [
         {
-          text: "mrinalinipahawa@gmail.com",
-          href: "mailto:mrinalinipahawa@gmail.com",
+          text: "mrinalinipahwa@gmail.com",
+          href: "mailto:mrinalinipahwa@gmail.com",
         },
         {
           text: "rageshrir@gmail.com",
@@ -516,6 +526,31 @@ const RoomsSection = () => {
                   })}
                 </div>
 
+                {/* Pricing Box - Burra Bungalow */}
+                <div className="bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl p-5 border border-amber-300">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-amber-200 rounded-lg flex items-center justify-center">
+                        <Tag className="w-5 h-5 text-amber-800" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Per Day</p>
+                        <p className="text-2xl font-bold text-[#a08144]">₹23,000</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-emerald-700 font-semibold flex items-center gap-1 justify-end">
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        Breakfast included
+                      </p>
+                      <p className="text-xs text-emerald-700 font-semibold flex items-center gap-1 justify-end mt-0.5">
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        All taxes included
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Check-in/Check-out Timing Box - Burra Bungalow */}
                 <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
                   <div className="flex items-center gap-3">
@@ -545,6 +580,8 @@ const RoomsSection = () => {
               </div>
             </div>
           </div>
+
+          {/* Dining Section */}
           <div className="mt-32 pt-20 border-t border-gray-200">
             <img src="/vine1.png" alt="" className="object-contain w-auto h-full" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -591,11 +628,9 @@ const RoomsSection = () => {
               </div>
             </div>
           </div>
-          {/* Property Highlights Section - AFTER BURRA BUNGALOW */}
+
+          {/* Property Highlights Section */}
           <div className="mt-32 pt-20 border-t border-gray-200 relative overflow-hidden">
-            {/* LARGE VINES FOR PROPERTY HIGHLIGHTS SECTION ONLY */}
-            
-            {/* HUGE Left vine - positioned at VERY left edge of Property Highlights section */}
             <img 
               src="/vine.png" 
               alt=""
@@ -610,7 +645,6 @@ const RoomsSection = () => {
               }}
             />
             
-            {/* HUGE Right vine - positioned at VERY right edge of Property Highlights section */}
             <img 
               src="/vine.png" 
               alt=""
@@ -625,7 +659,6 @@ const RoomsSection = () => {
               }}
             />
             
-            {/* Additional decorative vines for depth */}
             <img 
               src="/vine.png" 
               alt=""
@@ -685,13 +718,12 @@ const RoomsSection = () => {
                   </div>
                 </div>
 
-                {/* Bedrooms Section - From Image Content */}
+                {/* Bedrooms Section */}
                 <div className="space-y-6">
                   <h3 className="text-2xl md:text-3xl font-serif font-bold text-gray-900">
                     Bedrooms
                   </h3>
                   
-                  {/* Blue Bedroom - Existing */}
                   <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-white rounded-xl border border-blue-100">
                     <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center shrink-0">
                       <Sun className="w-5 h-5 text-blue-700" />
@@ -708,7 +740,6 @@ const RoomsSection = () => {
                     </div>
                   </div>
 
-                  {/* Green Bedroom - From Image */}
                   <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-white rounded-xl border border-emerald-100">
                     <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0">
                       <Moon className="w-5 h-5 text-emerald-700" />
@@ -725,7 +756,6 @@ const RoomsSection = () => {
                     </div>
                   </div>
 
-                  {/* Forest View Room - From Image */}
                   <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-amber-50 to-white rounded-xl border border-amber-100">
                     <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
                       <Trees className="w-5 h-5 text-amber-700" />
@@ -762,9 +792,9 @@ const RoomsSection = () => {
                 </div>
               </div>
 
-              {/* Sidebar Column - From Image Content */}
+              {/* Sidebar Column */}
               <div className="space-y-8">
-                {/* Additional Facilities - From Image */}
+                {/* Additional Facilities */}
                 <div className="bg-gradient-to-br from-emerald-50 to-white p-6 rounded-2xl border border-emerald-200">
                   <h4 className="text-lg font-semibold text-emerald-900 mb-4">
                     Additional Facilities
@@ -797,7 +827,7 @@ const RoomsSection = () => {
                   </ul>
                 </div>
 
-                {/* Daily Experience - From Image */}
+                {/* Daily Experience */}
                 <div className="bg-gradient-to-br from-amber-50 to-white p-6 rounded-2xl border border-amber-200">
                   <div className="flex items-center gap-3 mb-4">
                     <Calendar className="w-5 h-5 text-amber-700" />
@@ -870,7 +900,7 @@ const RoomsSection = () => {
             </div>
           </div>
 
-          {/* Annexe Section - AFTER PROPERTY HIGHLIGHTS */}
+          {/* Annexe Section */}
           <div className="mt-32 pt-20 border-t border-gray-200">
             {/* Annexe Heading - VISIBLE ONLY ON MOBILE */}
             <div className="lg:hidden text-center mb-12">
@@ -895,7 +925,6 @@ const RoomsSection = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
 
-                    {/* Navigation Arrows */}
                     <button
                       onClick={() => handlePrevImage(1)}
                       className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
@@ -913,7 +942,6 @@ const RoomsSection = () => {
 
                   {/* Thumbnail Gallery with Navigation */}
                   <div className="relative flex items-center gap-1 sm:gap-2 w-full">
-                    {/* Left Arrow */}
                     <button
                       onClick={() => handleThumbnailPrev(1)}
                       disabled={thumbnailStartIndex[1] === 0}
@@ -926,7 +954,6 @@ const RoomsSection = () => {
                       <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
 
-                    {/* Thumbnails Container */}
                     <div className="flex gap-1.5 sm:gap-2 md:gap-3 flex-1 justify-center overflow-hidden">
                       {rooms[1].images
                         .slice(
@@ -958,7 +985,6 @@ const RoomsSection = () => {
                         })}
                     </div>
 
-                    {/* Right Arrow */}
                     <button
                       onClick={() => handleThumbnailNext(1)}
                       disabled={
@@ -1016,6 +1042,31 @@ const RoomsSection = () => {
                   })}
                 </div>
 
+                {/* Pricing Box - Annexe */}
+                <div className="bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl p-5 border border-amber-300">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-amber-200 rounded-lg flex items-center justify-center">
+                        <Tag className="w-5 h-5 text-amber-800" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Per Day</p>
+                        <p className="text-2xl font-bold text-[#a08144]">₹12,000</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-emerald-700 font-semibold flex items-center gap-1 justify-end">
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        Breakfast included
+                      </p>
+                      <p className="text-xs text-emerald-700 font-semibold flex items-center gap-1 justify-end mt-0.5">
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        All taxes included
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Check-in/Check-out Timing Box - Annexe */}
                 <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
                   <div className="flex items-center gap-3">
@@ -1046,10 +1097,89 @@ const RoomsSection = () => {
             </div>
           </div>
 
-          {/* ===== BONFIRE SITOUT SECTION — mirrors Culinary Experience layout ===== */}
+          {/* ===== COMBINED TARIFF SECTION — shown after both rooms ===== */}
+          <div className="mt-20 pt-16 border-t border-gray-200">
+            <div className="text-center mb-10">
+              <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">Plan Your Retreat</h3>
+              <p className="text-gray-500 mt-2 text-sm">All rates per day · Inclusive of breakfast & taxes</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {/* Burra Bungalow Rate */}
+              <div className="relative bg-white rounded-2xl border-2 border-amber-200 shadow-md hover:shadow-xl transition-all duration-300 p-6 flex flex-col items-center text-center group hover:border-amber-400">
+                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
+                  <Home className="w-6 h-6 text-amber-700" />
+                </div>
+                <h4 className="font-serif font-bold text-gray-900 text-lg mb-1">Burra Bungalow</h4>
+                <p className="text-xs text-gray-500 mb-4">3 Bedrooms · Up to 6 guests</p>
+                <div className="mt-auto">
+                  <p className="text-3xl font-bold text-[#a08144]">₹23,000</p>
+                  <p className="text-xs text-emerald-700 font-medium mt-1 flex items-center justify-center gap-1">
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    Per day · Incl. breakfast &amp; taxes
+                  </p>
+                </div>
+                <button
+                  onClick={() => openModal("Burra Bungalow")}
+                  className="mt-5 w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-sm font-semibold py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow"
+                >
+                  Book Now
+                </button>
+              </div>
+
+              {/* Annexe Rate */}
+              <div className="relative bg-white rounded-2xl border-2 border-amber-200 shadow-md hover:shadow-xl transition-all duration-300 p-6 flex flex-col items-center text-center group hover:border-amber-400">
+                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
+                  <Trees className="w-6 h-6 text-amber-700" />
+                </div>
+                <h4 className="font-serif font-bold text-gray-900 text-lg mb-1">Annexe</h4>
+                <p className="text-xs text-gray-500 mb-4">2 Bedrooms · Forest &amp; valley views</p>
+                <div className="mt-auto">
+                  <p className="text-3xl font-bold text-[#a08144]">₹12,000</p>
+                  <p className="text-xs text-emerald-700 font-medium mt-1 flex items-center justify-center gap-1">
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    Per day · Incl. breakfast &amp; taxes
+                  </p>
+                </div>
+                <button
+                  onClick={() => openModal("Annexe")}
+                  className="mt-5 w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-sm font-semibold py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow"
+                >
+                  Book Now
+                </button>
+              </div>
+
+              {/* Combo Rate */}
+              <div className="relative bg-gradient-to-br from-amber-600 to-amber-700 rounded-2xl border-2 border-amber-500 shadow-lg hover:shadow-2xl transition-all duration-300 p-6 flex flex-col items-center text-center group">
+                {/* Best Value badge */}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-xs font-bold px-4 py-1 rounded-full shadow whitespace-nowrap">
+                  Best Value
+                </div>
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <h4 className="font-serif font-bold text-white text-lg mb-1">Burra Bungalow + Annexe</h4>
+                <p className="text-xs text-amber-100 mb-4">Entire property · All 5 bedrooms</p>
+                <div className="mt-auto">
+                  <p className="text-3xl font-bold text-white">₹30,000</p>
+                  <p className="text-xs text-amber-100 font-medium mt-1 flex items-center justify-center gap-1">
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    Per day · Incl. breakfast &amp; taxes
+                  </p>
+                </div>
+                <button
+                  onClick={() => openModal("Burra Bungalow + Annexe Combo")}
+                  className="mt-5 w-full bg-white hover:bg-amber-50 text-amber-800 text-sm font-semibold py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow"
+                >
+                  Book Now
+                </button>
+              </div>
+            </div>
+          </div>
+          {/* ===== END COMBINED TARIFF SECTION ===== */}
+
+          {/* ===== BONFIRE SITOUT SECTION ===== */}
           <div className="mt-32 pt-20 border-t border-gray-200">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              {/* Image Section */}
               <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-3xl shadow-2xl group">
                 <img
                   src="/bonfire.webp"
@@ -1057,11 +1187,8 @@ const RoomsSection = () => {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
-                {/* Floating badge on image */}
-                
               </div>
 
-              {/* Content Section */}
               <div className="space-y-8">
                 <div className="space-y-4">
                   <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-semibold">
@@ -1076,7 +1203,6 @@ const RoomsSection = () => {
                   </p>
                 </div>
 
-                {/* Features List — same style as Culinary section */}
                 <div className="space-y-4">
                   {[
                     "Bonfire & sit-out",
@@ -1092,9 +1218,6 @@ const RoomsSection = () => {
                     </div>
                   ))}
                 </div>
-
-                {/* Evening hours note */}
-                
               </div>
             </div>
           </div>
@@ -1103,7 +1226,6 @@ const RoomsSection = () => {
         </div>
 
         <style>{`
-          /* Property Highlights vine animations */
           @keyframes property-vine-left {
             0% {
               opacity: 0;
@@ -1170,7 +1292,6 @@ const RoomsSection = () => {
             }
           }
           
-          /* Subtle sway animation for property vines */
           @keyframes property-vine-sway {
             0%, 100% {
               transform: scaleY(-1) rotate(5deg) translateX(0) translateY(0);
@@ -1237,7 +1358,6 @@ const RoomsSection = () => {
             {/* Modal content */}
             <div className="p-8">
               {isSubmitted ? (
-                // Success message
                 <div className="text-center py-12">
                   <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <CheckCircle className="w-10 h-10 text-emerald-600" />
@@ -1265,11 +1385,43 @@ const RoomsSection = () => {
                   </button>
                 </div>
               ) : (
-                // Form
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Contact Info */}
-                  <div className="lg:col-span-1">
-                    <div className="bg-gray-50 rounded-2xl p-6 h-full">
+                  {/* Contact Info + Interactive Pricing */}
+                  <div className="lg:col-span-1 space-y-4">
+                    {/* Interactive Pricing Summary in Modal */}
+                    <div className="bg-amber-50 rounded-2xl p-5 border border-amber-200">
+                      <h3 className="text-base font-serif font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <Tag className="w-4 h-4 text-amber-700" />
+                        Select Your Room
+                      </h3>
+                      <div className="space-y-3">
+                        {pricingOptions.map((opt, i) => (
+                          <button
+                            key={i}
+                            onClick={() => handleRoomTypeSelection(opt.label)}
+                            className={`w-full text-left p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
+                              formData.roomType === opt.label 
+                                ? "bg-amber-100 border-amber-400 shadow-md transform scale-105" 
+                                : "bg-white border-amber-100 hover:bg-amber-50 hover:border-amber-300 hover:scale-[1.02]"
+                            }`}
+                          >
+                            <p className="text-xs font-semibold text-gray-700">{opt.label}</p>
+                            <p className="text-lg font-bold text-[#a08144]">{opt.price}</p>
+                            <p className="text-xs text-emerald-700 flex items-center gap-1 mt-0.5">
+                              <CheckCircle className="w-3 h-3" /> Per day · {opt.note}
+                            </p>
+                            {formData.roomType === opt.label && (
+                              <div className="mt-2 text-xs text-emerald-600 font-semibold flex items-center gap-1">
+                                <CheckCircle className="w-3 h-3" />
+                                Selected
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-2xl p-6">
                       <h3 className="text-xl font-serif font-bold text-gray-900 mb-6">
                         Contact Information
                       </h3>
@@ -1321,8 +1473,9 @@ const RoomsSection = () => {
                             onChange={handleChange} 
                             className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
                           >
-                            <option value="Burra Bungalow">Burra Bungalow</option>
-                            <option value="Annexe">Annexe</option>
+                            <option value="Burra Bungalow">Burra Bungalow — ₹23,000/day</option>
+                            <option value="Annexe">Annexe — ₹12,000/day</option>
+                            <option value="Burra Bungalow + Annexe Combo">Burra Bungalow + Annexe Combo — ₹30,000/day</option>
                           </select>
                         </div>
                       </div>
@@ -1364,14 +1517,14 @@ const RoomsSection = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
                         <div className="relative">
                           <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                          <input 
-                            type="tel" 
-                            name="phone" 
-                            value={formData.phone} 
-                            onChange={handleChange} 
-                            placeholder="+91 98765 43210"
-                            className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-gray-500 text-gray-900 ${errors.phone ? "border-red-300 bg-red-50" : "border-gray-200"}`} 
-                          />
+                            <input 
+                              type="tel" 
+                              name="phone" 
+                              value={formData.phone} 
+                              onChange={handleChange} 
+                              placeholder="+91 98765 43210"
+                              className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-gray-500 text-gray-900 ${errors.phone ? "border-red-300 bg-red-50" : "border-gray-200"}`} 
+                            />
                           {errors.phone && <div className="flex items-center gap-1 mt-1 text-red-600 text-sm"><AlertCircle className="w-4 h-4" />{errors.phone}</div>}
                         </div>
                       </div>

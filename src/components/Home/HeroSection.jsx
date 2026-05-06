@@ -14,7 +14,8 @@ import {
   Calendar,
   Users,
   Award,
-  Home // Added Home icon for room type
+  Home,
+  Tag,
 } from "lucide-react";
 
 const HeroSection = () => {
@@ -29,7 +30,7 @@ const HeroSection = () => {
     checkOut: "",
     guests: "2",
     message: "",
-    roomType: "Burra Bungalow", // Added roomType field
+    roomType: "Burra Bungalow",
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,6 +42,13 @@ const HeroSection = () => {
   const modalRef = useRef(null);
 
   const BASE_URLL = "https://burrabungalow.com";
+
+  /* Pricing data for modal reference */
+  const pricingOptions = [
+    { label: "Burra Bungalow", price: "₹23,000", note: "Incl. breakfast & taxes" },
+    { label: "Annexe", price: "₹12,000", note: "Incl. breakfast & taxes" },
+    { label: "Burra Bungalow + Annexe Combo", price: "₹30,000", note: "Incl. breakfast & taxes" },
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -79,9 +87,9 @@ const HeroSection = () => {
     if (isModalOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("keydown", handleEscapeKey);
-      document.body.style.overflow = "hidden"; // Prevent scrolling
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto"; // Restore scrolling
+      document.body.style.overflow = "auto";
     }
 
     return () => {
@@ -93,7 +101,6 @@ const HeroSection = () => {
 
   const openModal = () => {
     setIsModalOpen(true);
-    // Reset form state when opening modal
     setIsSubmitted(false);
     setFormData({
       name: "",
@@ -103,7 +110,7 @@ const HeroSection = () => {
       checkOut: "",
       guests: "2",
       message: "",
-      roomType: "Burra Bungalow", // Reset room type
+      roomType: "Burra Bungalow",
     });
     setErrors({});
   };
@@ -121,7 +128,7 @@ const HeroSection = () => {
       newErrors.email = "Email is invalid";
     }
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    // Message is now optional - removed validation
+    if (!formData.message.trim()) newErrors.message = "Message is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -132,6 +139,10 @@ const HeroSection = () => {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
+  };
+
+  const handleRoomTypeSelection = (roomType) => {
+    setFormData((prev) => ({ ...prev, roomType: roomType }));
   };
 
   const handleSubmit = async () => {
@@ -160,9 +171,9 @@ const HeroSection = () => {
           checkOut: "",
           guests: "2",
           message: "",
-          roomType: "Burra Bungalow", // Reset room type
+          roomType: "Burra Bungalow",
         });
-        closeModal(); // Close modal after successful submission
+        closeModal();
       }, 3000);
     } catch (error) {
       console.error("Form submit error:", error);
@@ -172,16 +183,8 @@ const HeroSection = () => {
     }
   };
 
-  /* ✅ GROUPED CONTACT INFO */
+  /* GROUPED CONTACT INFO */
   const contactInfo = [
-    // {
-    //   icon: Phone,
-    //   title: "For Reservations",
-    //   items: [
-    //     { text: "+91 9810301645", href: "tel:+919810301645" },
-    //     { text: "+91 9845155496", href: "tel:+919845155496" },
-    //   ],
-    // },
     {
       icon: Mail,
       title: "Email Inquiries",
@@ -390,7 +393,7 @@ const HeroSection = () => {
                 <div>
                   <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-semibold mb-3">
                     <MessageSquare className="w-4 h-4" />
-                    BOOK YOUR STAY
+                    BOOK YOUR STAY - {formData.roomType.toUpperCase()}
                   </div>
                   <h2 className="text-3xl font-serif font-bold text-gray-900">
                     Plan Your Perfect{" "}
@@ -439,9 +442,42 @@ const HeroSection = () => {
               ) : (
                 // Form
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Contact Info */}
-                  <div className="lg:col-span-1">
-                    <div className="bg-gray-50 rounded-2xl p-6 h-full">
+                  {/* Contact Info + Interactive Pricing */}
+                  <div className="lg:col-span-1 space-y-4">
+                    {/* Interactive Pricing Summary in Modal */}
+                    <div className="bg-amber-50 rounded-2xl p-5 border border-amber-200">
+                      <h3 className="text-base font-serif font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <Tag className="w-4 h-4 text-amber-700" />
+                        Select Your Room
+                      </h3>
+                      <div className="space-y-3">
+                        {pricingOptions.map((opt, i) => (
+                          <button
+                            key={i}
+                            onClick={() => handleRoomTypeSelection(opt.label)}
+                            className={`w-full text-left p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
+                              formData.roomType === opt.label 
+                                ? "bg-amber-100 border-amber-400 shadow-md transform scale-105" 
+                                : "bg-white border-amber-100 hover:bg-amber-50 hover:border-amber-300 hover:scale-[1.02]"
+                            }`}
+                          >
+                            <p className="text-xs font-semibold text-gray-700">{opt.label}</p>
+                            <p className="text-lg font-bold text-[#a08144]">{opt.price}</p>
+                            <p className="text-xs text-emerald-700 flex items-center gap-1 mt-0.5">
+                              <CheckCircle className="w-3 h-3" /> Per day · {opt.note}
+                            </p>
+                            {formData.roomType === opt.label && (
+                              <div className="mt-2 text-xs text-emerald-600 font-semibold flex items-center gap-1">
+                                <CheckCircle className="w-3 h-3" />
+                                Selected
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-2xl p-6">
                       <h3 className="text-xl font-serif font-bold text-gray-900 mb-6">
                         Contact Information
                       </h3>
@@ -482,7 +518,7 @@ const HeroSection = () => {
                   {/* Form */}
                   <div className="lg:col-span-2">
                     <div className="space-y-6">
-                      {/* Room Type Dropdown - ADDED */}
+                      {/* Room Type Dropdown - Updated to include all options */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Room Type *</label>
                         <div className="relative">
@@ -491,10 +527,11 @@ const HeroSection = () => {
                             name="roomType" 
                             value={formData.roomType} 
                             onChange={handleChange} 
-                            className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-gray-900"
+                            className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
                           >
-                            <option value="Burra Bungalow">Burra Bungalow</option>
-                            <option value="Annexe">Annexe</option>
+                            <option value="Burra Bungalow">Burra Bungalow — ₹23,000/day</option>
+                            <option value="Annexe">Annexe — ₹12,000/day</option>
+                            <option value="Burra Bungalow + Annexe Combo">Burra Bungalow + Annexe Combo — ₹30,000/day</option>
                           </select>
                         </div>
                       </div>
@@ -597,8 +634,22 @@ const HeroSection = () => {
                         </div>
                       </div>
 
+                      {/* Check-in/Check-out Time Info */}
+                      <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                        <div className="flex items-center gap-3">
+                          <Clock className="w-5 h-5 text-amber-600" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">Check-in & Check-out Timings</p>
+                            <p className="text-sm text-gray-600">
+                              Check-in: <span className="font-semibold">2:00 PM</span> | Check-out: <span className="font-semibold">12:00 PM (Noon)</span>
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">Early check-in and late check-out subject to availability</p>
+                          </div>
+                        </div>
+                      </div>
+
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Special Requests (Optional)</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Special Requests *</label>
                         <div className="relative">
                           <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                           <textarea 
@@ -606,9 +657,10 @@ const HeroSection = () => {
                             value={formData.message} 
                             onChange={handleChange} 
                             rows="3" 
-                            placeholder="Tell us about any special requirements... (optional)"
-                            className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-500 text-gray-900" 
+                            placeholder="Tell us about any special requirements..."
+                            className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-500 text-gray-900 ${errors.message ? "border-red-300 bg-red-50" : "border-gray-200"}`} 
                           />
+                          {errors.message && <div className="flex items-center gap-1 mt-1 text-red-600 text-sm"><AlertCircle className="w-4 h-4" />{errors.message}</div>}
                         </div>
                       </div>
 

@@ -248,6 +248,7 @@ export default function ContactEnquiry() {
                     >
                       <option value="Burra Bungalow">Burra Bungalow</option>
                       <option value="Annexe">Annexe</option>
+                      <option value="Burra Bungalow + Annexe Combo">Burra Bungalow + Annexe Combo</option>
                     </select>
                   </div>
                 </div>
