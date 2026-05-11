@@ -114,6 +114,8 @@ const rooms = [
     badge: "Premium",
     checkIn: "2:00 PM",
     checkOut: "12:00 PM",
+    summerOffer:
+      "Special summer offer - Book for 3 nights and get 20% off. Rates inclusive of breakfast and taxes. Offer valid till 30th May. (Valid for bookings made through the website.)",
   },
 ];
 
@@ -155,8 +157,8 @@ const RoomsSection = () => {
     };
 
     updateThumbnailCount();
-    window.addEventListener('resize', updateThumbnailCount);
-    return () => window.removeEventListener('resize', updateThumbnailCount);
+    window.addEventListener("resize", updateThumbnailCount);
+    return () => window.removeEventListener("resize", updateThumbnailCount);
   }, []);
 
   useEffect(() => {
@@ -188,10 +190,7 @@ const RoomsSection = () => {
   }, [isModalOpen]);
 
   const handleImageSelect = (roomIndex, imageIndex) => {
-    setSelectedImages((prev) => ({
-      ...prev,
-      [roomIndex]: imageIndex,
-    }));
+    setSelectedImages((prev) => ({ ...prev, [roomIndex]: imageIndex }));
   };
 
   const handlePrevImage = (roomIndex) => {
@@ -244,9 +243,7 @@ const RoomsSection = () => {
     setErrors({});
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsModalOpen(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -265,31 +262,23 @@ const RoomsSection = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleRoomTypeSelection = (roomType) => {
-    setFormData((prev) => ({ ...prev, roomType: roomType }));
+    setFormData((prev) => ({ ...prev, roomType }));
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
     setIsSubmitting(true);
-
     try {
       await fetch(`${BASE_URLL}/api/contact/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
       setIsSubmitted(true);
-
       setTimeout(() => {
         setIsSubmitted(false);
         setFormData({
@@ -312,11 +301,26 @@ const RoomsSection = () => {
     }
   };
 
-  /* Pricing data for modal reference */
   const pricingOptions = [
-    { label: "Burra Bungalow", price: "₹23,000", note: "Incl. breakfast & taxes" },
-    { label: "Annexe", price: "₹12,000", note: "Incl. breakfast & taxes" },
-    { label: "Burra Bungalow + Annexe Combo", price: "₹30,000", note: "Incl. breakfast & taxes" },
+    {
+      label: "Burra Bungalow",
+      price: "₹23,000",
+      note: "Incl. breakfast & taxes",
+      hasOffer: false,
+    },
+    {
+      label: "Annexe",
+      price: "₹12,000",
+      note: "Incl. breakfast & taxes",
+      hasOffer: true,
+      offerText: "Book 3 nights & get 20% off! Valid till 30th May",
+    },
+    {
+      label: "Burra Bungalow + Annexe Combo",
+      price: "₹30,000",
+      note: "Incl. breakfast & taxes",
+      hasOffer: false,
+    },
   ];
 
   const contactInfo = [
@@ -332,14 +336,8 @@ const RoomsSection = () => {
       icon: Mail,
       title: "Email Inquiries",
       items: [
-        {
-          text: "mrinalinipahwa@gmail.com",
-          href: "mailto:mrinalinipahwa@gmail.com",
-        },
-        {
-          text: "rageshrir@gmail.com",
-          href: "mailto:rageshrir@gmail.com",
-        },
+        { text: "mrinalinipahwa@gmail.com", href: "mailto:mrinalinipahwa@gmail.com" },
+        { text: "rageshrir@gmail.com", href: "mailto:rageshrir@gmail.com" },
       ],
     },
     {
@@ -349,9 +347,12 @@ const RoomsSection = () => {
         {
           text: (
             <>
-              Burra Bungalow<br />
-              Savitri Bhawan (Near wynberg Junior School)<br />
-              Rajpur Road, Mussoorie<br />
+              Burra Bungalow
+              <br />
+              Savitri Bhawan (Near wynberg Junior School)
+              <br />
+              Rajpur Road, Mussoorie
+              <br />
               Uttarakhand 248197
             </>
           ),
@@ -361,11 +362,106 @@ const RoomsSection = () => {
     },
   ];
 
+  /* ── Reusable thumbnail gallery ── */
+  const ThumbnailGallery = ({ roomIndex, children }) => {
+    const room = rooms[roomIndex];
+    return (
+      <div className="space-y-4">
+        {/* Main image */}
+        <div className="relative w-full h-[320px] sm:h-[420px] md:h-[500px] lg:h-[560px] overflow-hidden rounded-3xl shadow-2xl group">
+          <img
+            src={room.images[selectedImages[roomIndex]]}
+            alt={`${room.title} - Image ${selectedImages[roomIndex] + 1}`}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+
+          <button
+            onClick={() => handlePrevImage(roomIndex)}
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white rounded-full flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => handleNextImage(roomIndex)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white rounded-full flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Thumbnail strip */}
+        <div className="flex items-center gap-2 w-full">
+          <button
+            onClick={() => handleThumbnailPrev(roomIndex)}
+            disabled={thumbnailStartIndex[roomIndex] === 0}
+            className={`shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
+              thumbnailStartIndex[roomIndex] === 0
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-amber-100 text-amber-700 hover:bg-amber-200 hover:scale-110"
+            }`}
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          <div className="flex gap-2 flex-1 justify-center overflow-hidden">
+            {room.images
+              .slice(
+                thumbnailStartIndex[roomIndex],
+                thumbnailStartIndex[roomIndex] + thumbnailsToShow
+              )
+              .map((image, imgIdx) => {
+                const actualIndex = thumbnailStartIndex[roomIndex] + imgIdx;
+                return (
+                  <button
+                    key={actualIndex}
+                    onClick={() => handleImageSelect(roomIndex, actualIndex)}
+                    className={`relative flex-1 min-w-0 aspect-[4/3] max-w-[90px] md:max-w-[110px] rounded-xl overflow-hidden transition-all duration-300 ${
+                      selectedImages[roomIndex] === actualIndex
+                        ? "ring-2 ring-amber-500 ring-offset-2 scale-105"
+                        : "opacity-70 hover:opacity-100 hover:scale-105"
+                    }`}
+                  >
+                    <img
+                      src={image}
+                      alt={`${room.title} thumbnail ${actualIndex + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    {selectedImages[roomIndex] === actualIndex && (
+                      <div className="absolute inset-0 bg-amber-500/20 border-2 border-amber-500 rounded-xl" />
+                    )}
+                  </button>
+                );
+              })}
+          </div>
+
+          <button
+            onClick={() => handleThumbnailNext(roomIndex)}
+            disabled={
+              thumbnailStartIndex[roomIndex] >=
+              room.images.length - thumbnailsToShow
+            }
+            className={`shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
+              thumbnailStartIndex[roomIndex] >=
+              room.images.length - thumbnailsToShow
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-amber-100 text-amber-700 hover:bg-amber-200 hover:scale-110"
+            }`}
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+        {children && <div className="mt-4">{children}</div>}
+      </div>
+    );
+  };
+
   return (
     <>
-      <section className="w-full bg-gradient-to-br from-amber-50 via-white to-stone-50 py-20 px-4 md:px-10 relative overflow-hidden">
+      <section className="w-full bg-gradient-to-br from-amber-50 via-white to-stone-50 py-20 px-4 sm:px-6 md:px-10 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative">
-          {/* Section Header */}
+
+          {/* ── Section Header ── */}
           <div className="text-center mb-20">
             <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold mb-6">
               LUXURY ACCOMMODATIONS
@@ -380,118 +476,30 @@ const RoomsSection = () => {
             </p>
           </div>
 
-          {/* Burra Bungalow Section */}
-          <div className="space-y-10">
-            {/* Burra Bungalow Heading - VISIBLE ONLY ON MOBILE */}
+          {/* ══════════════════════════════════════════
+              BURRA BUNGALOW
+          ══════════════════════════════════════════ */}
+          <div className="space-y-12">
+            {/* Mobile heading */}
             <div className="lg:hidden text-center">
-              <h3 className="text-4xl md:text-5xl font-serif font-bold text-[#a08144] mb-4">
+              <h3 className="text-4xl md:text-5xl font-serif font-bold text-[#a08144] mb-3">
                 Burra Bungalow
               </h3>
-              <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-1 rounded-full text-sm font-semibold mb-6">
+              <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-1 rounded-full text-sm font-semibold">
                 Most Popular
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              {/* Image Gallery Section */}
-              <div className="relative lg:order-1">
-                <div className="space-y-4">
-                  {/* Main Image */}
-                  <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-3xl shadow-2xl group">
-                    <img
-                      src={rooms[0].images[selectedImages[0]]}
-                      alt={`${rooms[0].title} - Image ${selectedImages[0] + 1}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
-
-                    {/* Navigation Arrows */}
-                    <button
-                      onClick={() => handlePrevImage(0)}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
-                    >
-                      <ChevronLeft className="w-6 h-6" />
-                    </button>
-
-                    <button
-                      onClick={() => handleNextImage(0)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
-                    >
-                      <ChevronRight className="w-6 h-6" />
-                    </button>
-                  </div>
-
-                  {/* Thumbnail Gallery with Navigation */}
-                  <div className="relative flex items-center gap-1 sm:gap-2 w-full">
-                    {/* Left Arrow */}
-                    <button
-                      onClick={() => handleThumbnailPrev(0)}
-                      disabled={thumbnailStartIndex[0] === 0}
-                      className={`shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-                        thumbnailStartIndex[0] === 0
-                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                          : "bg-amber-100 text-amber-700 hover:bg-amber-200 hover:scale-110"
-                      }`}
-                    >
-                      <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
-
-                    {/* Thumbnails Container */}
-                    <div className="flex gap-1.5 sm:gap-2 md:gap-3 flex-1 justify-center overflow-hidden">
-                      {rooms[0].images
-                        .slice(
-                          thumbnailStartIndex[0],
-                          thumbnailStartIndex[0] + thumbnailsToShow
-                        )
-                        .map((image, imgIdx) => {
-                          const actualIndex = thumbnailStartIndex[0] + imgIdx;
-                          return (
-                            <button
-                              key={actualIndex}
-                              onClick={() => handleImageSelect(0, actualIndex)}
-                              className={`relative flex-1 min-w-0 aspect-[4/3] max-w-[80px] sm:max-w-[100px] md:max-w-[120px] rounded-lg sm:rounded-xl overflow-hidden transition-all duration-300 ${
-                                selectedImages[0] === actualIndex
-                                  ? "ring-2 sm:ring-3 ring-amber-500 ring-offset-1 sm:ring-offset-2 scale-105"
-                                  : "hover:scale-105 opacity-70 hover:opacity-100"
-                              }`}
-                            >
-                              <img
-                                src={image}
-                                alt={`${rooms[0].title} thumbnail ${actualIndex + 1}`}
-                                className="w-full h-full object-cover"
-                              />
-                              {selectedImages[0] === actualIndex && (
-                                <div className="absolute inset-0 bg-amber-500/20 border-2 border-amber-500 rounded-lg sm:rounded-xl"></div>
-                              )}
-                            </button>
-                          );
-                        })}
-                    </div>
-
-                    {/* Right Arrow */}
-                    <button
-                      onClick={() => handleThumbnailNext(0)}
-                      disabled={
-                        thumbnailStartIndex[0] >=
-                        rooms[0].images.length - thumbnailsToShow
-                      }
-                      className={`shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-                        thumbnailStartIndex[0] >=
-                        rooms[0].images.length - thumbnailsToShow
-                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                          : "bg-amber-100 text-amber-700 hover:bg-amber-200 hover:scale-110"
-                      }`}
-                    >
-                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
-                  </div>
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-start">
+              {/* Gallery — left on desktop */}
+              <div className="w-full min-w-0">
+                <ThumbnailGallery roomIndex={0} />
               </div>
 
-              {/* Content Section */}
-              <div className="space-y-8 lg:order-2">
-                {/* Burra Bungalow Heading - VISIBLE ONLY ON DESKTOP */}
-                <div className="hidden lg:block space-y-4">
+              {/* Content — right on desktop */}
+              <div className="w-full min-w-0 space-y-6">
+                {/* Desktop heading */}
+                <div className="hidden lg:block space-y-3">
                   <h3 className="text-3xl md:text-4xl font-serif font-bold text-[#a08144]">
                     Burra Bungalow
                   </h3>
@@ -500,14 +508,12 @@ const RoomsSection = () => {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <p className="text-lg text-black leading-relaxed">
-                    {rooms[0].description}
-                  </p>
-                </div>
+                <p className="text-base md:text-lg text-black leading-relaxed">
+                  {rooms[0].description}
+                </p>
 
-                {/* Features Grid */}
-                <div className="grid grid-cols-2 gap-4">
+                {/* Features */}
+                <div className="grid grid-cols-2 gap-3">
                   {rooms[0].features.map((feature, i) => {
                     const Icon = feature.icon;
                     return (
@@ -515,10 +521,10 @@ const RoomsSection = () => {
                         key={i}
                         className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm border border-gray-100 hover:border-amber-200 transition-colors"
                       >
-                        <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                          <Icon className="w-5 h-5 text-amber-700" />
+                        <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
+                          <Icon className="w-4 h-4 text-amber-700" />
                         </div>
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-gray-700 leading-tight">
                           {feature.text}
                         </span>
                       </div>
@@ -526,16 +532,20 @@ const RoomsSection = () => {
                   })}
                 </div>
 
-                {/* Pricing Box - Burra Bungalow */}
+                {/* Pricing */}
                 <div className="bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl p-5 border border-amber-300">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between flex-wrap gap-3">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-amber-200 rounded-lg flex items-center justify-center">
                         <Tag className="w-5 h-5 text-amber-800" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Per Day</p>
-                        <p className="text-2xl font-bold text-[#a08144]">₹23,000</p>
+                        <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">
+                          Per Day
+                        </p>
+                        <p className="text-2xl font-bold text-[#a08144]">
+                          ₹23,000
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -551,28 +561,33 @@ const RoomsSection = () => {
                   </div>
                 </div>
 
-                {/* Check-in/Check-out Timing Box - Burra Bungalow */}
+                {/* Check-in/out */}
                 <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
                       <Clock className="w-5 h-5 text-amber-700" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">Check-in & Check-out</p>
-                      <p className="text-sm text-gray-700">
-                        Check-in: <span className="font-medium">{rooms[0].checkIn}</span> | 
-                        Check-out: <span className="font-medium">{rooms[0].checkOut}</span>
+                      <p className="text-sm font-semibold text-gray-900">
+                        Check-in &amp; Check-out
                       </p>
-                      <p className="text-xs text-gray-500 mt-0.5">Early check-in subject to availability</p>
+                      <p className="text-sm text-gray-700">
+                        Check-in:{" "}
+                        <span className="font-medium">{rooms[0].checkIn}</span>{" "}
+                        | Check-out:{" "}
+                        <span className="font-medium">{rooms[0].checkOut}</span>
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        Early check-in subject to availability
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-4">
+                <div>
                   <button
                     onClick={() => openModal("Burra Bungalow")}
-                    className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl inline-block"
+                    className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
                   >
                     Book Now
                   </button>
@@ -581,23 +596,25 @@ const RoomsSection = () => {
             </div>
           </div>
 
-          {/* Dining Section */}
-          <div className="mt-32 pt-20 border-t border-gray-200">
-            <img src="/vine1.png" alt="" className="object-contain w-auto h-full" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              {/* Image Section */}
-              <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-3xl shadow-2xl group">
+          {/* ── Dining Section ── */}
+          <div className="mt-24 pt-16 border-t border-gray-200">
+            <img
+              src="/vine1.png"
+              alt=""
+              className="object-contain w-auto h-full"
+            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-center">
+              <div className="relative w-full h-[320px] sm:h-[420px] md:h-[500px] lg:h-[560px] overflow-hidden rounded-3xl shadow-2xl group">
                 <img
                   src="/dinning.webp"
                   alt="Dining Experience"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
               </div>
 
-              {/* Content Section */}
-              <div className="space-y-8">
-                <div className="space-y-4">
+              <div className="space-y-6">
+                <div className="space-y-3">
                   <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold">
                     <Utensils className="w-4 h-4" />
                     CULINARY EXCELLENCE
@@ -605,21 +622,24 @@ const RoomsSection = () => {
                   <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">
                     A Classic Culinary Experience
                   </h3>
-                  <p className="text-lg text-gray-600 leading-relaxed">
-                  Step into a boutique homestay where you can enjoy private, peaceful dining with simple, authentic food made with care. Surrounded by beautiful mountain views and sunrise views, you can relax with home-cooked meals and a cozy bonfire & sit-out, making every meal a warm and memorable experience.
+                  <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                    Step into a boutique homestay where you can enjoy private,
+                    peaceful dining with simple, authentic food made with care.
+                    Surrounded by beautiful mountain views and sunrise views, you
+                    can relax with home-cooked meals and a cozy bonfire &amp;
+                    sit-out, making every meal a warm and memorable experience.
                   </p>
                 </div>
 
-                {/* Features List */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {[
                     "Wholesome home cooked meals",
                     "Balcony with valley views",
                     "Caretaker / home-cooked meals",
                   ].map((feature, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center">
-                        <div className="w-2 h-2 bg-amber-600 rounded-full"></div>
+                      <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center shrink-0">
+                        <div className="w-2 h-2 bg-amber-600 rounded-full" />
                       </div>
                       <span className="text-gray-700">{feature}</span>
                     </div>
@@ -629,67 +649,35 @@ const RoomsSection = () => {
             </div>
           </div>
 
-          {/* Property Highlights Section */}
-          <div className="mt-32 pt-20 border-t border-gray-200 relative overflow-hidden">
-            <img 
-              src="/vine.png" 
-              alt=""
-              className="absolute left-0 top-1/4 w-40 md:w-56 lg:w-72 h-[80vh] opacity-70 pointer-events-none z-0 animate-property-vine-left"
-              style={{ 
-                transform: 'scaleY(-1) rotate(5deg)',
-                animationDelay: '0.2s',
-                animationFillMode: 'both',
-                filter: 'drop-shadow(4px 8px 12px rgba(0,0,0,0.4))',
-                objectFit: 'cover',
-                objectPosition: 'left center'
-              }}
-            />
-            
-            <img 
-              src="/vine.png" 
-              alt=""
-              className="absolute right-0 top-1/4 w-40 md:w-56 lg:w-72 h-[80vh] opacity-70 pointer-events-none z-0 animate-property-vine-right"
-              style={{ 
-                transform: 'scaleY(1) rotate(-5deg)',
-                animationDelay: '0.5s',
-                animationFillMode: 'both',
-                filter: 'drop-shadow(4px 8px 12px rgba(0,0,0,0.4))',
-                objectFit: 'cover',
-                objectPosition: 'right center'
-              }}
-            />
-            
-            <img 
-              src="/vine.png" 
-              alt=""
-              className="absolute left-4 md:left-6 top-1/3 w-24 md:w-32 lg:w-40 h-[60vh] opacity-50 pointer-events-none z-0 animate-property-vine-left"
-              style={{ 
-                transform: 'scaleY(0.9) rotate(8deg)',
-                animationDelay: '0.8s',
-                animationFillMode: 'both',
-                objectFit: 'cover',
-                objectPosition: 'left center'
-              }}
-            />
-            
-            <img 
-              src="/vine.png" 
-              alt=""
-              className="absolute right-4 md:right-6 bottom-1/4 w-24 md:w-32 lg:w-40 h-[60vh] opacity-50 pointer-events-none z-0 animate-property-vine-right"
-              style={{ 
-                transform: 'scaleY(0.9) rotate(-8deg)',
-                animationDelay: '1s',
-                animationFillMode: 'both',
-                objectFit: 'cover',
-                objectPosition: 'right center'
-              }}
-            />
+          {/* ── Property Highlights ── */}
+          <div className="mt-24 pt-16 border-t border-gray-200 relative overflow-hidden">
+            {/* Vine decorations */}
+            {[
+              { side: "left", style: { left: 0, top: "25%", transform: "scaleY(-1) rotate(5deg)" }, cls: "animate-property-vine-left", delay: "0.2s" },
+              { side: "right", style: { right: 0, top: "25%", transform: "scaleY(1) rotate(-5deg)" }, cls: "animate-property-vine-right", delay: "0.5s" },
+              { side: "left2", style: { left: 16, top: "33%", transform: "scaleY(0.9) rotate(8deg)", opacity: 0.5 }, cls: "animate-property-vine-left", delay: "0.8s", sm: true },
+              { side: "right2", style: { right: 16, bottom: "25%", transform: "scaleY(0.9) rotate(-8deg)", opacity: 0.5 }, cls: "animate-property-vine-right", delay: "1s", sm: true },
+            ].map((v, i) => (
+              <img
+                key={i}
+                src="/vine.png"
+                alt=""
+                className={`absolute w-32 md:w-44 lg:w-56 h-[60vh] pointer-events-none z-0 ${v.cls} ${v.sm ? "hidden sm:block" : ""}`}
+                style={{
+                  ...v.style,
+                  filter: "drop-shadow(4px 8px 12px rgba(0,0,0,0.4))",
+                  objectFit: "cover",
+                  animationDelay: v.delay,
+                  animationFillMode: "both",
+                  opacity: v.style.opacity ?? 0.7,
+                }}
+              />
+            ))}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
-              {/* Main Features Column */}
+              {/* Main Features */}
               <div className="lg:col-span-2 space-y-8">
-                {/* Key Features Grid */}
-                <div className="space-y-6">
+                <div className="space-y-5">
                   <h3 className="text-2xl md:text-3xl font-serif font-bold text-gray-900">
                     Property Highlights
                   </h3>
@@ -701,13 +689,13 @@ const RoomsSection = () => {
                       { icon: Wifi, text: "Good Wi-Fi connectivity", color: "bg-purple-100 text-purple-700" },
                       { icon: Tv, text: "Large TV in lobby", color: "bg-red-100 text-red-700" },
                       { icon: CloudSun, text: "Spacious light-filled rooms", color: "bg-yellow-100 text-yellow-700" },
-                      { icon: Wind, text: "High wooden beamed ceiling", color: "bg-brown-100 text-brown-700" },
+                      { icon: Wind, text: "High wooden beamed ceiling", color: "bg-stone-100 text-stone-700" },
                     ].map((feature, i) => (
                       <div
                         key={i}
                         className="flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all"
                       >
-                        <div className={`w-10 h-10 ${feature.color.split(' ')[0]} rounded-lg flex items-center justify-center shrink-0`}>
+                        <div className={`w-10 h-10 ${feature.color.split(" ")[0]} rounded-lg flex items-center justify-center shrink-0`}>
                           <feature.icon className="w-5 h-5" />
                         </div>
                         <span className="text-sm font-medium text-gray-700">
@@ -718,156 +706,133 @@ const RoomsSection = () => {
                   </div>
                 </div>
 
-                {/* Bedrooms Section */}
-                <div className="space-y-6">
+                {/* Bedrooms */}
+                <div className="space-y-5">
                   <h3 className="text-2xl md:text-3xl font-serif font-bold text-gray-900">
                     Bedrooms
                   </h3>
-                  
-                  <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-white rounded-xl border border-blue-100">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center shrink-0">
-                      <Sun className="w-5 h-5 text-blue-700" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Blue Bedroom</h4>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Facing east, perfect for early risers who enjoy watching the sunrise from the comfort of their bed
-                      </p>
-                      <div className="mt-2 text-xs text-gray-500 flex items-center gap-1">
-                        <Bath className="w-3 h-3" />
-                        Attached bathroom
+                  {[
+                    {
+                      icon: Sun,
+                      iconColor: "bg-blue-100 text-blue-700",
+                      wrapColor: "from-blue-50",
+                      borderColor: "border-blue-100",
+                      title: "Blue Bedroom",
+                      desc: "Facing east, perfect for early risers who enjoy watching the sunrise from the comfort of their bed",
+                    },
+                    {
+                      icon: Moon,
+                      iconColor: "bg-emerald-100 text-emerald-700",
+                      wrapColor: "from-emerald-50",
+                      borderColor: "border-emerald-100",
+                      title: "Green Bedroom",
+                      desc: "Facing west, bathed in warm afternoon light—ideal for late risers",
+                    },
+                    {
+                      icon: Trees,
+                      iconColor: "bg-amber-100 text-amber-700",
+                      wrapColor: "from-amber-50",
+                      borderColor: "border-amber-100",
+                      title: "Forest View Room",
+                      desc: "Smaller and wonderfully cosy, offers beautiful sunlit view of the forest",
+                    },
+                  ].map((br, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-start gap-4 p-4 bg-gradient-to-r ${br.wrapColor} to-white rounded-xl border ${br.borderColor}`}
+                    >
+                      <div className={`w-10 h-10 ${br.iconColor.split(" ")[0]} rounded-lg flex items-center justify-center shrink-0`}>
+                        <br.icon className={`w-5 h-5 ${br.iconColor.split(" ")[1]}`} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">{br.title}</h4>
+                        <p className="text-sm text-gray-600 mt-1">{br.desc}</p>
+                        <div className="mt-2 text-xs text-gray-500 flex items-center gap-1">
+                          <Bath className="w-3 h-3" /> Attached bathroom
+                        </div>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-white rounded-xl border border-emerald-100">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0">
-                      <Moon className="w-5 h-5 text-emerald-700" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Green Bedroom</h4>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Facing west, bathed in warm afternoon light—ideal for late risers
-                      </p>
-                      <div className="mt-2 text-xs text-gray-500 flex items-center gap-1">
-                        <Bath className="w-3 h-3" />
-                        Attached bathroom
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-amber-50 to-white rounded-xl border border-amber-100">
-                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
-                      <Trees className="w-5 h-5 text-amber-700" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Forest View Room</h4>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Smaller and wonderfully cosy, offers beautiful sunlit view of the forest
-                      </p>
-                      <div className="mt-2 text-xs text-gray-500 flex items-center gap-1">
-                        <Bath className="w-3 h-3" />
-                        Attached bathroom
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                {/* Kitchen and Amenities */}
-                <div className="space-y-6">
+                {/* Kitchen */}
+                <div className="space-y-4">
                   <h3 className="text-2xl md:text-3xl font-serif font-bold text-gray-900">
-                    Kitchen & Amenities
+                    Kitchen &amp; Amenities
                   </h3>
                   <div className="bg-gradient-to-br from-amber-50 to-white p-6 rounded-2xl border border-amber-200">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <Utensils className="w-6 h-6 text-amber-700" />
-                        <h4 className="font-semibold text-gray-900">Spacious Kitchen</h4>
-                      </div>
-                      <p className="text-gray-700">
-                        Fully equipped with refrigerator, gas stove, microwave, oven, washing machine, and iron.
-                      </p>
+                    <div className="flex items-center gap-3 mb-3">
+                      <Utensils className="w-6 h-6 text-amber-700" />
+                      <h4 className="font-semibold text-gray-900">Spacious Kitchen</h4>
                     </div>
+                    <p className="text-gray-700">
+                      Fully equipped with refrigerator, gas stove, microwave,
+                      oven, washing machine, and iron.
+                    </p>
                   </div>
                 </div>
               </div>
 
-              {/* Sidebar Column */}
-              <div className="space-y-8">
-                {/* Additional Facilities */}
+              {/* Sidebar */}
+              <div className="space-y-6">
                 <div className="bg-gradient-to-br from-emerald-50 to-white p-6 rounded-2xl border border-emerald-200">
                   <h4 className="text-lg font-semibold text-emerald-900 mb-4">
                     Additional Facilities
                   </h4>
                   <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <div className="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                        <Home className="w-3 h-3 text-emerald-700" />
-                      </div>
-                      <span className="text-sm text-gray-700">
-                        Separate driver/nanny room with attached bathroom (additional charge)
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                        <Trees className="w-3 h-3 text-emerald-700" />
-                      </div>
-                      <span className="text-sm text-gray-700">
-                        Large patios on either side of the bungalow
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                        <Sparkles className="w-3 h-3 text-emerald-700" />
-                      </div>
-                      <span className="text-sm text-gray-700">
-                        Wood and coal-fired sigri for evening gatherings
-                      </span>
-                    </li>
+                    {[
+                      { icon: Home, text: "Separate driver/nanny room with attached bathroom (additional charge)" },
+                      { icon: Trees, text: "Large patios on either side of the bungalow" },
+                      { icon: Sparkles, text: "Wood and coal-fired sigri for evening gatherings" },
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <div className="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                          <item.icon className="w-3 h-3 text-emerald-700" />
+                        </div>
+                        <span className="text-sm text-gray-700">{item.text}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
-                {/* Daily Experience */}
                 <div className="bg-gradient-to-br from-amber-50 to-white p-6 rounded-2xl border border-amber-200">
                   <div className="flex items-center gap-3 mb-4">
                     <Calendar className="w-5 h-5 text-amber-700" />
-                    <h4 className="text-lg font-semibold text-amber-900">Daily Experience</h4>
+                    <h4 className="text-lg font-semibold text-amber-900">
+                      Daily Experience
+                    </h4>
                   </div>
-                  
                   <div className="space-y-4">
                     <div>
                       <h5 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        Typical Day:
+                        <Clock className="w-4 h-4" /> Typical Day:
                       </h5>
                       <ul className="space-y-2">
                         {[
                           "Explore the hill station during the day",
                           "Return to hot pakodas and tea in late afternoon",
                           "Evening sigri with steaming hot momos served by our cook",
-                          "Dinner at home while unwinding"
+                          "Dinner at home while unwinding",
                         ].map((item, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <div className="w-1.5 h-1.5 bg-amber-600 rounded-full mt=1.5"></div>
+                            <div className="w-1.5 h-1.5 bg-amber-600 rounded-full mt-1.5 shrink-0" />
                             <span className="text-sm text-gray-700">{item}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    
                     <div className="pt-4 border-t border-amber-100">
                       <h5 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-                        <Staff className="w-4 h-4" />
-                        Staff Services:
+                        <Staff className="w-4 h-4" /> Staff Services:
                       </h5>
                       <ul className="space-y-2">
                         {[
                           "Two full-time house staff live on the property",
                           "Take care of cooking, cleaning, and daily needs",
-                          "Allow you to truly relax and create cherished memories"
+                          "Allow you to truly relax and create cherished memories",
                         ].map((item, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <div className="w-1.5 h-1.5 bg-amber-600 rounded-full mt-1.5"></div>
+                            <div className="w-1.5 h-1.5 bg-amber-600 rounded-full mt-1.5 shrink-0" />
                             <span className="text-sm text-gray-700">{item}</span>
                           </li>
                         ))}
@@ -876,21 +841,13 @@ const RoomsSection = () => {
                   </div>
                 </div>
 
-                {/* Perfect For */}
                 <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-2xl border border-amber-200">
                   <h4 className="text-lg font-semibold text-amber-900 mb-4">
                     Perfect For
                   </h4>
                   <div className="space-y-2">
-                    {[
-                      "Couples seeking privacy",
-                      "Families reconnecting",
-                      "Friend getaways",
-                    ].map((item, i) => (
-                      <div
-                        key={i}
-                        className="bg-white/80 p-3 rounded-lg hover:bg-white transition-colors"
-                      >
+                    {["Couples seeking privacy", "Families reconnecting", "Friend getaways"].map((item, i) => (
+                      <div key={i} className="bg-white/80 p-3 rounded-lg hover:bg-white transition-colors">
                         <span className="text-sm font-medium text-gray-700">{item}</span>
                       </div>
                     ))}
@@ -900,11 +857,13 @@ const RoomsSection = () => {
             </div>
           </div>
 
-          {/* Annexe Section */}
-          <div className="mt-32 pt-20 border-t border-gray-200">
-            {/* Annexe Heading - VISIBLE ONLY ON MOBILE */}
-            <div className="lg:hidden text-center mb-12">
-              <h3 className="text-4xl md:text-5xl font-serif font-bold text-[#a08144] mb-4">
+          {/* ══════════════════════════════════════════
+              ANNEXE
+          ══════════════════════════════════════════ */}
+          <div className="mt-24 pt-16 border-t border-gray-200">
+            {/* Mobile heading */}
+            <div className="lg:hidden text-center mb-10">
+              <h3 className="text-4xl md:text-5xl font-serif font-bold text-[#a08144] mb-3">
                 Annexe
               </h3>
               <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-1 rounded-full text-sm font-semibold">
@@ -912,102 +871,37 @@ const RoomsSection = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              {/* Image Gallery Section */}
-              <div className="relative lg:order-2">
-                <div className="space-y-4">
-                  {/* Main Image */}
-                  <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-3xl shadow-2xl group">
-                    <img
-                      src={rooms[1].images[selectedImages[1]]}
-                      alt={`${rooms[1].title} - Image ${selectedImages[1] + 1}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
-
-                    <button
-                      onClick={() => handlePrevImage(1)}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
-                    >
-                      <ChevronLeft className="w-6 h-6" />
-                    </button>
-
-                    <button
-                      onClick={() => handleNextImage(1)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
-                    >
-                      <ChevronRight className="w-6 h-6" />
-                    </button>
-                  </div>
-
-                  {/* Thumbnail Gallery with Navigation */}
-                  <div className="relative flex items-center gap-1 sm:gap-2 w-full">
-                    <button
-                      onClick={() => handleThumbnailPrev(1)}
-                      disabled={thumbnailStartIndex[1] === 0}
-                      className={`shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-                        thumbnailStartIndex[1] === 0
-                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                          : "bg-amber-100 text-amber-700 hover:bg-amber-200 hover:scale-110"
-                      }`}
-                    >
-                      <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
-
-                    <div className="flex gap-1.5 sm:gap-2 md:gap-3 flex-1 justify-center overflow-hidden">
-                      {rooms[1].images
-                        .slice(
-                          thumbnailStartIndex[1],
-                          thumbnailStartIndex[1] + thumbnailsToShow
-                        )
-                        .map((image, imgIdx) => {
-                          const actualIndex = thumbnailStartIndex[1] + imgIdx;
-                          return (
-                            <button
-                              key={actualIndex}
-                              onClick={() => handleImageSelect(1, actualIndex)}
-                              className={`relative flex-1 min-w-0 aspect-[4/3] max-w-[80px] sm:max-w-[100px] md:max-w-[120px] rounded-lg sm:rounded-xl overflow-hidden transition-all duration-300 ${
-                                selectedImages[1] === actualIndex
-                                  ? "ring-2 sm:ring-3 ring-amber-500 ring-offset-1 sm:ring-offset-2 scale-105"
-                                  : "hover:scale-105 opacity-70 hover:opacity-100"
-                              }`}
-                            >
-                              <img
-                                src={image}
-                                alt={`${rooms[1].title} thumbnail ${actualIndex + 1}`}
-                                className="w-full h-full object-cover"
-                              />
-                              {selectedImages[1] === actualIndex && (
-                                <div className="absolute inset-0 bg-amber-500/20 border-2 border-amber-500 rounded-lg sm:rounded-xl"></div>
-                              )}
-                            </button>
-                          );
-                        })}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-start">
+              {/* Gallery — right on desktop, offer card below */}
+              <div className="w-full min-w-0 lg:order-2">
+                <ThumbnailGallery roomIndex={1}>
+                  {rooms[1].summerOffer && (
+                    <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-5 border-2 border-orange-300 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-20 h-20 opacity-10 pointer-events-none">
+                        <Sparkles className="w-full h-full text-orange-500" />
+                      </div>
+                      <div className="flex items-start gap-3 relative z-10">
+                        <div className="w-10 h-10 bg-orange-200 rounded-lg flex items-center justify-center shrink-0">
+                          <Tag className="w-5 h-5 text-orange-700" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-orange-800 mb-1">SPECIAL SUMMER OFFER</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{rooms[1].summerOffer}</p>
+                          <div className="mt-3 flex items-center gap-2 flex-wrap">
+                            <div className="bg-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full">20% OFF</div>
+                            <span className="text-xs text-orange-700">Valid till 30th May</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
-                    <button
-                      onClick={() => handleThumbnailNext(1)}
-                      disabled={
-                        thumbnailStartIndex[1] >=
-                        rooms[1].images.length - thumbnailsToShow
-                      }
-                      className={`shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-                        thumbnailStartIndex[1] >=
-                        rooms[1].images.length - thumbnailsToShow
-                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                          : "bg-amber-100 text-amber-700 hover:bg-amber-200 hover:scale-110"
-                      }`}
-                    >
-                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
-                  </div>
-                </div>
+                  )}
+                </ThumbnailGallery>
               </div>
 
-              {/* Content Section */}
-              <div className="space-y-8 lg:order-1">
-                {/* Annexe Heading - VISIBLE ONLY ON DESKTOP */}
-                <div className="hidden lg:block space-y-4">
+              {/* Content — left on desktop */}
+              <div className="w-full min-w-0 space-y-6 lg:order-1">
+                {/* Desktop heading */}
+                <div className="hidden lg:block space-y-3">
                   <h3 className="text-3xl md:text-4xl font-serif font-bold text-[#a08144]">
                     Annexe
                   </h3>
@@ -1016,14 +910,12 @@ const RoomsSection = () => {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <p className="text-lg text-black leading-relaxed">
-                    {rooms[1].description}
-                  </p>
-                </div>
+                <p className="text-base md:text-lg text-black leading-relaxed">
+                  {rooms[1].description}
+                </p>
 
-                {/* Features Grid */}
-                <div className="grid grid-cols-2 gap-4">
+                {/* Features */}
+                <div className="grid grid-cols-2 gap-3">
                   {rooms[1].features.map((feature, i) => {
                     const Icon = feature.icon;
                     return (
@@ -1031,10 +923,10 @@ const RoomsSection = () => {
                         key={i}
                         className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm border border-gray-100 hover:border-amber-200 transition-colors"
                       >
-                        <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                          <Icon className="w-5 h-5 text-amber-700" />
+                        <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
+                          <Icon className="w-4 h-4 text-amber-700" />
                         </div>
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-gray-700 leading-tight">
                           {feature.text}
                         </span>
                       </div>
@@ -1042,16 +934,20 @@ const RoomsSection = () => {
                   })}
                 </div>
 
-                {/* Pricing Box - Annexe */}
+                {/* Pricing */}
                 <div className="bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl p-5 border border-amber-300">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between flex-wrap gap-3">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-amber-200 rounded-lg flex items-center justify-center">
                         <Tag className="w-5 h-5 text-amber-800" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Per Day</p>
-                        <p className="text-2xl font-bold text-[#a08144]">₹12,000</p>
+                        <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">
+                          Per Day
+                        </p>
+                        <p className="text-2xl font-bold text-[#a08144]">
+                          ₹12,000
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -1067,28 +963,33 @@ const RoomsSection = () => {
                   </div>
                 </div>
 
-                {/* Check-in/Check-out Timing Box - Annexe */}
+                {/* Check-in/out */}
                 <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
                       <Clock className="w-5 h-5 text-amber-700" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">Check-in & Check-out</p>
-                      <p className="text-sm text-gray-700">
-                        Check-in: <span className="font-medium">{rooms[1].checkIn}</span> | 
-                        Check-out: <span className="font-medium">{rooms[1].checkOut}</span>
+                      <p className="text-sm font-semibold text-gray-900">
+                        Check-in &amp; Check-out
                       </p>
-                      <p className="text-xs text-gray-500 mt-0.5">Early check-in subject to availability</p>
+                      <p className="text-sm text-gray-700">
+                        Check-in:{" "}
+                        <span className="font-medium">{rooms[1].checkIn}</span>{" "}
+                        | Check-out:{" "}
+                        <span className="font-medium">{rooms[1].checkOut}</span>
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        Early check-in subject to availability
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-4">
+                <div>
                   <button
                     onClick={() => openModal("Annexe")}
-                    className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl inline-block"
+                    className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
                   >
                     Book Now
                   </button>
@@ -1097,20 +998,28 @@ const RoomsSection = () => {
             </div>
           </div>
 
-          {/* ===== COMBINED TARIFF SECTION — shown after both rooms ===== */}
+          {/* ── Combined Tariff ── */}
           <div className="mt-20 pt-16 border-t border-gray-200">
             <div className="text-center mb-10">
-              <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">Plan Your Retreat</h3>
-              <p className="text-gray-500 mt-2 text-sm">All rates per day · Inclusive of breakfast & taxes</p>
+              <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">
+                Plan Your Retreat
+              </h3>
+              <p className="text-gray-500 mt-2 text-sm">
+                All rates per day · Inclusive of breakfast &amp; taxes
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {/* Burra Bungalow Rate */}
+              {/* Burra Bungalow */}
               <div className="relative bg-white rounded-2xl border-2 border-amber-200 shadow-md hover:shadow-xl transition-all duration-300 p-6 flex flex-col items-center text-center group hover:border-amber-400">
                 <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
                   <Home className="w-6 h-6 text-amber-700" />
                 </div>
-                <h4 className="font-serif font-bold text-gray-900 text-lg mb-1">Burra Bungalow</h4>
-                <p className="text-xs text-gray-500 mb-4">3 Bedrooms · Up to 6 guests</p>
+                <h4 className="font-serif font-bold text-gray-900 text-lg mb-1">
+                  Burra Bungalow
+                </h4>
+                <p className="text-xs text-gray-500 mb-4">
+                  3 Bedrooms · Up to 6 guests
+                </p>
                 <div className="mt-auto">
                   <p className="text-3xl font-bold text-[#a08144]">₹23,000</p>
                   <p className="text-xs text-emerald-700 font-medium mt-1 flex items-center justify-center gap-1">
@@ -1126,13 +1035,17 @@ const RoomsSection = () => {
                 </button>
               </div>
 
-              {/* Annexe Rate */}
+              {/* Annexe */}
               <div className="relative bg-white rounded-2xl border-2 border-amber-200 shadow-md hover:shadow-xl transition-all duration-300 p-6 flex flex-col items-center text-center group hover:border-amber-400">
                 <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
                   <Trees className="w-6 h-6 text-amber-700" />
                 </div>
-                <h4 className="font-serif font-bold text-gray-900 text-lg mb-1">Annexe</h4>
-                <p className="text-xs text-gray-500 mb-4">2 Bedrooms · Forest &amp; valley views</p>
+                <h4 className="font-serif font-bold text-gray-900 text-lg mb-1">
+                  Annexe
+                </h4>
+                <p className="text-xs text-gray-500 mb-4">
+                  2 Bedrooms · Forest &amp; valley views
+                </p>
                 <div className="mt-auto">
                   <p className="text-3xl font-bold text-[#a08144]">₹12,000</p>
                   <p className="text-xs text-emerald-700 font-medium mt-1 flex items-center justify-center gap-1">
@@ -1148,17 +1061,20 @@ const RoomsSection = () => {
                 </button>
               </div>
 
-              {/* Combo Rate */}
+              {/* Combo */}
               <div className="relative bg-gradient-to-br from-amber-600 to-amber-700 rounded-2xl border-2 border-amber-500 shadow-lg hover:shadow-2xl transition-all duration-300 p-6 flex flex-col items-center text-center group">
-                {/* Best Value badge */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-xs font-bold px-4 py-1 rounded-full shadow whitespace-nowrap">
                   Best Value
                 </div>
                 <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
-                <h4 className="font-serif font-bold text-white text-lg mb-1">Burra Bungalow + Annexe</h4>
-                <p className="text-xs text-amber-100 mb-4">Entire property · All 5 bedrooms</p>
+                <h4 className="font-serif font-bold text-white text-lg mb-1">
+                  Burra Bungalow + Annexe
+                </h4>
+                <p className="text-xs text-amber-100 mb-4">
+                  Entire property · All 5 bedrooms
+                </p>
                 <div className="mt-auto">
                   <p className="text-3xl font-bold text-white">₹30,000</p>
                   <p className="text-xs text-amber-100 font-medium mt-1 flex items-center justify-center gap-1">
@@ -1175,22 +1091,21 @@ const RoomsSection = () => {
               </div>
             </div>
           </div>
-          {/* ===== END COMBINED TARIFF SECTION ===== */}
 
-          {/* ===== BONFIRE SITOUT SECTION ===== */}
-          <div className="mt-32 pt-20 border-t border-gray-200">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-3xl shadow-2xl group">
+          {/* ── Bonfire Section ── */}
+          <div className="mt-24 pt-16 border-t border-gray-200">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-center">
+              <div className="relative w-full h-[320px] sm:h-[420px] md:h-[500px] lg:h-[560px] overflow-hidden rounded-3xl shadow-2xl group">
                 <img
                   src="/bonfire.webp"
                   alt="Bonfire Sitout Area"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
               </div>
 
-              <div className="space-y-8">
-                <div className="space-y-4">
+              <div className="space-y-6">
+                <div className="space-y-3">
                   <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-semibold">
                     <Flame className="w-4 h-4" />
                     OUTDOOR SITOUT
@@ -1198,12 +1113,16 @@ const RoomsSection = () => {
                   <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">
                     The Bonfire Experience
                   </h3>
-                  <p className="text-lg text-gray-600 leading-relaxed">
-                  As the mountain air cools and the last light fades behind the ridgeline, our open-air bonfire sitout comes alive. Gather around a crackling bonfire with steaming chai and hot pakodas close at hand the kind of evening that stays with you long after you leave the mountains.
+                  <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                    As the mountain air cools and the last light fades behind the
+                    ridgeline, our open-air bonfire sitout comes alive. Gather
+                    around a crackling bonfire with steaming chai and hot pakodas
+                    close at hand — the kind of evening that stays with you long
+                    after you leave the mountains.
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {[
                     "Bonfire & sit-out",
                     "Comfortable seating with cushioned chairs",
@@ -1212,7 +1131,7 @@ const RoomsSection = () => {
                   ].map((feature, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center shrink-0">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-orange-500 rounded-full" />
                       </div>
                       <span className="text-gray-700">{feature}</span>
                     </div>
@@ -1221,142 +1140,71 @@ const RoomsSection = () => {
               </div>
             </div>
           </div>
-          {/* ===== END BONFIRE SITOUT SECTION ===== */}
-
         </div>
 
         <style>{`
           @keyframes property-vine-left {
-            0% {
-              opacity: 0;
-              transform: scaleY(-1) rotate(5deg) translateX(-150px) translateY(-50px);
-              filter: blur(20px) drop-shadow(4px 8px 12px rgba(0,0,0,0));
-            }
-            20% {
-              opacity: 0.3;
-              transform: scaleY(-1) rotate(5deg) translateX(-100px) translateY(-30px);
-              filter: blur(15px) drop-shadow(4px 8px 12px rgba(0,0,0,0.1));
-            }
-            40% {
-              opacity: 0.5;
-              transform: scaleY(-1) rotate(5deg) translateX(-50px) translateY(-15px);
-              filter: blur(10px) drop-shadow(4px 8px 12px rgba(0,0,0,0.2));
-            }
-            60% {
-              opacity: 0.7;
-              transform: scaleY(-1) rotate(5deg) translateX(-20px) translateY(-5px);
-              filter: blur(5px) drop-shadow(4px 8px 12px rgba(0,0,0,0.3));
-            }
-            80% {
-              opacity: 0.75;
-              transform: scaleY(-1) rotate(5deg) translateX(5px) translateY(2px);
-              filter: blur(2px) drop-shadow(4px 8px 12px rgba(0,0,0,0.35));
-            }
-            100% {
-              opacity: 0.7;
-              transform: scaleY(-1) rotate(5deg) translateX(0) translateY(0);
-              filter: drop-shadow(4px 8px 12px rgba(0,0,0,0.4));
-            }
+            0% { opacity:0; transform:scaleY(-1) rotate(5deg) translateX(-150px) translateY(-50px); filter:blur(20px); }
+            60% { opacity:0.7; transform:scaleY(-1) rotate(5deg) translateX(-20px) translateY(-5px); filter:blur(5px); }
+            100% { opacity:0.7; transform:scaleY(-1) rotate(5deg) translateX(0) translateY(0); filter:drop-shadow(4px 8px 12px rgba(0,0,0,0.4)); }
           }
-          
           @keyframes property-vine-right {
-            0% {
-              opacity: 0;
-              transform: scaleY(1) rotate(-5deg) translateX(150px) translateY(-50px);
-              filter: blur(20px) drop-shadow(4px 8px 12px rgba(0,0,0,0));
-            }
-            20% {
-              opacity: 0.3;
-              transform: scaleY(1) rotate(-5deg) translateX(100px) translateY(-30px);
-              filter: blur(15px) drop-shadow(4px 8px 12px rgba(0,0,0,0.1));
-            }
-            40% {
-              opacity: 0.5;
-              transform: scaleY(1) rotate(-5deg) translateX(50px) translateY(-15px);
-              filter: blur(10px) drop-shadow(4px 8px 12px rgba(0,0,0,0.2));
-            }
-            60% {
-              opacity: 0.7;
-              transform: scaleY(1) rotate(-5deg) translateX(20px) translateY(-5px);
-              filter: blur(5px) drop-shadow(4px 8px 12px rgba(0,0,0,0.3));
-            }
-            80% {
-              opacity: 0.75;
-              transform: scaleY(1) rotate(-5deg) translateX(-5px) translateY(2px);
-              filter: blur(2px) drop-shadow(4px 8px 12px rgba(0,0,0,0.35));
-            }
-            100% {
-              opacity: 0.7;
-              transform: scaleY(1) rotate(-5deg) translateX(0) translateY(0);
-              filter: drop-shadow(4px 8px 12px rgba(0,0,0,0.4));
-            }
+            0% { opacity:0; transform:scaleY(1) rotate(-5deg) translateX(150px) translateY(-50px); filter:blur(20px); }
+            60% { opacity:0.7; transform:scaleY(1) rotate(-5deg) translateX(20px) translateY(-5px); filter:blur(5px); }
+            100% { opacity:0.7; transform:scaleY(1) rotate(-5deg) translateX(0) translateY(0); filter:drop-shadow(4px 8px 12px rgba(0,0,0,0.4)); }
           }
-          
           @keyframes property-vine-sway {
-            0%, 100% {
-              transform: scaleY(-1) rotate(5deg) translateX(0) translateY(0);
-            }
-            25% {
-              transform: scaleY(-1) rotate(5deg) translateX(-8px) translateY(-5px) rotate(-0.8deg);
-            }
-            50% {
-              transform: scaleY(-1) rotate(5deg) translateX(0) translateY(0);
-            }
-            75% {
-              transform: scaleY(-1) rotate(5deg) translateX(8px) translateY(5px) rotate(0.8deg);
-            }
+            0%,100% { transform:scaleY(-1) rotate(5deg) translateX(0); }
+            25% { transform:scaleY(-1) rotate(5deg) translateX(-8px); }
+            75% { transform:scaleY(-1) rotate(5deg) translateX(8px); }
           }
-          
           .animate-property-vine-left {
-            animation: property-vine-left 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, 
+            animation: property-vine-left 2.5s cubic-bezier(0.34,1.56,0.64,1) forwards,
                        property-vine-sway 7s ease-in-out infinite 2.5s;
           }
-          
           .animate-property-vine-right {
-            animation: property-vine-right 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, 
+            animation: property-vine-right 2.5s cubic-bezier(0.34,1.56,0.64,1) forwards,
                        property-vine-sway 7s ease-in-out infinite 2.7s;
           }
         `}</style>
       </section>
 
-      {/* Modal */}
+      {/* ══════════ MODAL ══════════ */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <div 
+          <div
             className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
             onClick={closeModal}
-          ></div>
-          
-          {/* Modal container */}
-          <div 
+          />
+
+          <div
             ref={modalRef}
-            className="relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-10 duration-300"
+            className="relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
           >
-            {/* Modal header */}
-            <div className="sticky top-0 bg-white z-10 px-8 pt-8 pb-4 border-b">
-              <div className="flex justify-between items-center">
+            {/* Header */}
+            <div className="sticky top-0 bg-white z-10 px-6 sm:px-8 pt-6 sm:pt-8 pb-4 border-b">
+              <div className="flex justify-between items-start gap-4">
                 <div>
                   <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-semibold mb-3">
                     <MessageSquare className="w-4 h-4" />
-                    BOOK YOUR STAY - {formData.roomType.toUpperCase()}
+                    BOOK YOUR STAY — {formData.roomType.toUpperCase()}
                   </div>
-                  <h2 className="text-3xl font-serif font-bold text-gray-900">
+                  <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900">
                     Plan Your Perfect{" "}
                     <span className="text-[#caa355]">Getaway</span>
                   </h2>
                 </div>
                 <button
                   onClick={closeModal}
-                  className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+                  className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors shrink-0"
                 >
-                  <X className="w-6 h-6 text-gray-700" />
+                  <X className="w-5 h-5 text-gray-700" />
                 </button>
               </div>
             </div>
 
-            {/* Modal content */}
-            <div className="p-8">
+            {/* Body */}
+            <div className="p-6 sm:p-8">
               {isSubmitted ? (
                 <div className="text-center py-12">
                   <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -1366,8 +1214,8 @@ const RoomsSection = () => {
                     Thank You!
                   </h2>
                   <p className="text-gray-600 mb-6">
-                    Your inquiry has been received successfully. Our team will contact
-                    you within 2 hours.
+                    Your inquiry has been received. Our team will contact you
+                    within 2 hours.
                   </p>
                   <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-200 max-w-md mx-auto">
                     <p className="text-emerald-800 font-medium">
@@ -1386,9 +1234,8 @@ const RoomsSection = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Contact Info + Interactive Pricing */}
+                  {/* Sidebar */}
                   <div className="lg:col-span-1 space-y-4">
-                    {/* Interactive Pricing Summary in Modal */}
                     <div className="bg-amber-50 rounded-2xl p-5 border border-amber-200">
                       <h3 className="text-base font-serif font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <Tag className="w-4 h-4 text-amber-700" />
@@ -1399,21 +1246,31 @@ const RoomsSection = () => {
                           <button
                             key={i}
                             onClick={() => handleRoomTypeSelection(opt.label)}
-                            className={`w-full text-left p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
-                              formData.roomType === opt.label 
-                                ? "bg-amber-100 border-amber-400 shadow-md transform scale-105" 
+                            className={`w-full text-left p-3 rounded-xl border transition-all duration-300 ${
+                              formData.roomType === opt.label
+                                ? "bg-amber-100 border-amber-400 shadow-md scale-105"
                                 : "bg-white border-amber-100 hover:bg-amber-50 hover:border-amber-300 hover:scale-[1.02]"
                             }`}
                           >
-                            <p className="text-xs font-semibold text-gray-700">{opt.label}</p>
-                            <p className="text-lg font-bold text-[#a08144]">{opt.price}</p>
-                            <p className="text-xs text-emerald-700 flex items-center gap-1 mt-0.5">
-                              <CheckCircle className="w-3 h-3" /> Per day · {opt.note}
+                            <p className="text-xs font-semibold text-gray-700">
+                              {opt.label}
                             </p>
+                            <p className="text-lg font-bold text-[#a08144]">
+                              {opt.price}
+                            </p>
+                            <p className="text-xs text-emerald-700 flex items-center gap-1 mt-0.5">
+                              <CheckCircle className="w-3 h-3" /> Per day ·{" "}
+                              {opt.note}
+                            </p>
+                            {opt.hasOffer && (
+                              <div className="mt-2 inline-flex items-center gap-1 bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                                <Sparkles className="w-3 h-3" />
+                                {opt.offerText}
+                              </div>
+                            )}
                             {formData.roomType === opt.label && (
                               <div className="mt-2 text-xs text-emerald-600 font-semibold flex items-center gap-1">
-                                <CheckCircle className="w-3 h-3" />
-                                Selected
+                                <CheckCircle className="w-3 h-3" /> Selected
                               </div>
                             )}
                           </button>
@@ -1421,11 +1278,39 @@ const RoomsSection = () => {
                       </div>
                     </div>
 
-                    <div className="bg-gray-50 rounded-2xl p-6">
-                      <h3 className="text-xl font-serif font-bold text-gray-900 mb-6">
+                    {formData.roomType === "Annexe" && (
+                      <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl p-4 text-white shadow-lg">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center shrink-0">
+                            <Tag className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold mb-1">
+                              🎉 SPECIAL SUMMER OFFER!
+                            </p>
+                            <p className="text-xs text-white/90 leading-relaxed">
+                              Book Annexe for 3 nights and get 20% off. Rates
+                              inclusive of breakfast and taxes. Offer valid till
+                              30th May.
+                            </p>
+                            <div className="mt-2 flex items-center gap-2">
+                              <div className="bg-white text-orange-600 text-xs font-bold px-2 py-0.5 rounded-full">
+                                20% OFF
+                              </div>
+                              <span className="text-xs text-white/80">
+                                Valid till 30th May
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="bg-gray-50 rounded-2xl p-5">
+                      <h3 className="text-lg font-serif font-bold text-gray-900 mb-5">
                         Contact Information
                       </h3>
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {contactInfo.map((item, i) => {
                           const Icon = item.icon;
                           return (
@@ -1433,8 +1318,8 @@ const RoomsSection = () => {
                               key={i}
                               className="flex items-start gap-3 p-3 rounded-xl bg-white"
                             >
-                              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <Icon className="w-5 h-5 text-emerald-600" />
+                              <div className="w-9 h-9 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0">
+                                <Icon className="w-4 h-4 text-emerald-600" />
                               </div>
                               <div>
                                 <p className="font-medium text-gray-900 text-sm mb-1">
@@ -1460,178 +1345,246 @@ const RoomsSection = () => {
                   </div>
 
                   {/* Form */}
-                  <div className="lg:col-span-2">
-                    <div className="space-y-6">
-                      {/* Room Type Selection */}
+                  <div className="lg:col-span-2 space-y-5">
+                    {/* Room type select */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Room Type *
+                      </label>
+                      <div className="relative">
+                        <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <select
+                          name="roomType"
+                          value={formData.roomType}
+                          onChange={handleChange}
+                          className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
+                        >
+                          <option value="Burra Bungalow">
+                            Burra Bungalow — ₹23,000/day
+                          </option>
+                          <option value="Annexe">
+                            Annexe — ₹12,000/day (Summer Offer: 20% off for 3+
+                            nights)
+                          </option>
+                          <option value="Burra Bungalow + Annexe Combo">
+                            Burra Bungalow + Annexe Combo — ₹30,000/day
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Room Type *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Full Name *
+                        </label>
                         <div className="relative">
-                          <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                          <select 
-                            name="roomType" 
-                            value={formData.roomType} 
-                            onChange={handleChange} 
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Enter your full name"
+                            className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 placeholder:text-gray-400 text-gray-900 ${
+                              errors.name
+                                ? "border-red-300 bg-red-50"
+                                : "border-gray-200"
+                            }`}
+                          />
+                          {errors.name && (
+                            <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+                              <AlertCircle className="w-4 h-4" />
+                              {errors.name}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email Address *
+                        </label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="Enter your email"
+                            className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 placeholder:text-gray-400 text-gray-900 ${
+                              errors.email
+                                ? "border-red-300 bg-red-50"
+                                : "border-gray-200"
+                            }`}
+                          />
+                          {errors.email && (
+                            <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+                              <AlertCircle className="w-4 h-4" />
+                              {errors.email}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Phone Number *
+                      </label>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          placeholder="+91 98765 43210"
+                          className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 placeholder:text-gray-400 text-gray-900 ${
+                            errors.phone
+                              ? "border-red-300 bg-red-50"
+                              : "border-gray-200"
+                          }`}
+                        />
+                        {errors.phone && (
+                          <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+                            <AlertCircle className="w-4 h-4" />
+                            {errors.phone}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Check-in Date
+                        </label>
+                        <div className="relative">
+                          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="date"
+                            name="checkIn"
+                            value={formData.checkIn}
+                            onChange={handleChange}
+                            min={new Date().toISOString().split("T")[0]}
+                            className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Check-out Date
+                        </label>
+                        <div className="relative">
+                          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="date"
+                            name="checkOut"
+                            value={formData.checkOut}
+                            onChange={handleChange}
+                            min={
+                              formData.checkIn ||
+                              new Date().toISOString().split("T")[0]
+                            }
+                            className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Guests
+                        </label>
+                        <div className="relative">
+                          <GuestIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <select
+                            name="guests"
+                            value={formData.guests}
+                            onChange={handleChange}
                             className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
                           >
-                            <option value="Burra Bungalow">Burra Bungalow — ₹23,000/day</option>
-                            <option value="Annexe">Annexe — ₹12,000/day</option>
-                            <option value="Burra Bungalow + Annexe Combo">Burra Bungalow + Annexe Combo — ₹30,000/day</option>
+                            {[1, 2, 3, 4, 5, 6].map((n) => (
+                              <option key={n} value={n}>
+                                {n} Guest{n > 1 ? "s" : ""}
+                              </option>
+                            ))}
                           </select>
                         </div>
                       </div>
+                    </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                      <div className="flex items-center gap-3">
+                        <Clock className="w-5 h-5 text-amber-600 shrink-0" />
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                          <div className="relative">
-                            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input 
-                              type="text" 
-                              name="name" 
-                              value={formData.name} 
-                              onChange={handleChange} 
-                              placeholder="Enter your full name"
-                              className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-gray-500 text-gray-900 ${errors.name ? "border-red-300 bg-red-50" : "border-gray-200"}`} 
-                            />
-                            {errors.name && <div className="flex items-center gap-1 mt-1 text-red-600 text-sm"><AlertCircle className="w-4 h-4" />{errors.name}</div>}
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
-                          <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input 
-                              type="email" 
-                              name="email" 
-                              value={formData.email} 
-                              onChange={handleChange} 
-                              placeholder="Enter your email"
-                              className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-gray-500 text-gray-900 ${errors.email ? "border-red-300 bg-red-50" : "border-gray-200"}`} 
-                            />
-                            {errors.email && <div className="flex items-center gap-1 mt-1 text-red-600 text-sm"><AlertCircle className="w-4 h-4" />{errors.email}</div>}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-                        <div className="relative">
-                          <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input 
-                              type="tel" 
-                              name="phone" 
-                              value={formData.phone} 
-                              onChange={handleChange} 
-                              placeholder="+91 98765 43210"
-                              className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-gray-500 text-gray-900 ${errors.phone ? "border-red-300 bg-red-50" : "border-gray-200"}`} 
-                            />
-                          {errors.phone && <div className="flex items-center gap-1 mt-1 text-red-600 text-sm"><AlertCircle className="w-4 h-4" />{errors.phone}</div>}
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Check-in Date</label>
-                          <div className="relative">
-                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input 
-                              type="date" 
-                              name="checkIn" 
-                              value={formData.checkIn} 
-                              onChange={handleChange} 
-                              min={new Date().toISOString().split("T")[0]}
-                              className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 placeholder:text-gray-500 text-gray-900" 
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Check-out Date</label>
-                          <div className="relative">
-                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input 
-                              type="date" 
-                              name="checkOut" 
-                              value={formData.checkOut} 
-                              onChange={handleChange} 
-                              min={formData.checkIn || new Date().toISOString().split("T")[0]}
-                              className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 placeholder:text-gray-500 text-gray-900" 
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Guests</label>
-                          <div className="relative">
-                            <GuestIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <select 
-                              name="guests" 
-                              value={formData.guests} 
-                              onChange={handleChange} 
-                              className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
-                            >
-                              {[1, 2, 3, 4, 5, 6].map((n) => (
-                                <option key={n} value={n}>
-                                  {n} Guest{n > 1 ? "s" : ""}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Check-in/Check-out Time Info */}
-                      <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
-                        <div className="flex items-center gap-3">
-                          <Clock className="w-5 h-5 text-amber-600" />
-                          <div>
-                            <p className="text-sm font-medium text-gray-900">Check-in & Check-out Timings</p>
-                            <p className="text-sm text-gray-600">
-                              Check-in: <span className="font-semibold">2:00 PM</span> | Check-out: <span className="font-semibold">12:00 PM (Noon)</span>
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">Early check-in and late check-out subject to availability</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Special Requests *</label>
-                        <div className="relative">
-                          <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                          <textarea 
-                            name="message" 
-                            value={formData.message} 
-                            onChange={handleChange} 
-                            rows="3" 
-                            placeholder="Tell us about any special requirements..."
-                            className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-500 text-gray-900 ${errors.message ? "border-red-300 bg-red-50" : "border-gray-200"}`} 
-                          />
-                          {errors.message && <div className="flex items-center gap-1 mt-1 text-red-600 text-sm"><AlertCircle className="w-4 h-4" />{errors.message}</div>}
-                        </div>
-                      </div>
-
-                      <div className="pt-4">
-                        <button
-                          onClick={handleSubmit}
-                          disabled={isSubmitting}
-                          className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl transition-all hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                        >
-                          {isSubmitting ? (
-                            <>
-                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                              Sending...
-                            </>
-                          ) : (
-                            <>
-                              <Send className="w-5 h-5" />
-                              Send Booking Request
-                            </>
-                          )}
-                        </button>
-
-                        <div className="mt-4 bg-gray-50 rounded-xl p-3 text-center">
-                          <p className="text-sm text-gray-600 flex items-center justify-center gap-1">
-                            <Award className="w-4 h-4" /> Your information is secure
+                          <p className="text-sm font-medium text-gray-900">
+                            Check-in &amp; Check-out Timings
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Check-in:{" "}
+                            <span className="font-semibold">2:00 PM</span> |
+                            Check-out:{" "}
+                            <span className="font-semibold">12:00 PM (Noon)</span>
+                          </p>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            Early check-in and late check-out subject to
+                            availability
                           </p>
                         </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Special Requests *
+                      </label>
+                      <div className="relative">
+                        <MessageSquare className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                        <textarea
+                          name="message"
+                          value={formData.message}
+                          onChange={handleChange}
+                          rows="3"
+                          placeholder="Tell us about any special requirements..."
+                          className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 resize-none placeholder:text-gray-400 text-gray-900 ${
+                            errors.message
+                              ? "border-red-300 bg-red-50"
+                              : "border-gray-200"
+                          }`}
+                        />
+                        {errors.message && (
+                          <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+                            <AlertCircle className="w-4 h-4" />
+                            {errors.message}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="pt-2">
+                      <button
+                        onClick={handleSubmit}
+                        disabled={isSubmitting}
+                        className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl transition-all hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-5 h-5" />
+                            Send Booking Request
+                          </>
+                        )}
+                      </button>
+
+                      <div className="mt-4 bg-gray-50 rounded-xl p-3 text-center">
+                        <p className="text-sm text-gray-600 flex items-center justify-center gap-1">
+                          <Award className="w-4 h-4" /> Your information is
+                          secure
+                        </p>
                       </div>
                     </div>
                   </div>

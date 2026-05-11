@@ -16,6 +16,7 @@ import {
   Award,
   Home,
   Tag,
+  Sparkles,
 } from "lucide-react";
 
 const HeroSection = () => {
@@ -45,9 +46,9 @@ const HeroSection = () => {
 
   /* Pricing data for modal reference */
   const pricingOptions = [
-    { label: "Burra Bungalow", price: "₹23,000", note: "Incl. breakfast & taxes" },
-    { label: "Annexe", price: "₹12,000", note: "Incl. breakfast & taxes" },
-    { label: "Burra Bungalow + Annexe Combo", price: "₹30,000", note: "Incl. breakfast & taxes" },
+    { label: "Burra Bungalow", price: "₹23,000", note: "Incl. breakfast & taxes", hasOffer: false },
+    { label: "Annexe", price: "₹12,000", note: "Incl. breakfast & taxes", hasOffer: true, offerText: "Book 3 nights & get 20% off! Valid till 30th May" },
+    { label: "Burra Bungalow + Annexe Combo", price: "₹30,000", note: "Incl. breakfast & taxes", hasOffer: false },
   ];
 
   useEffect(() => {
@@ -238,7 +239,7 @@ const HeroSection = () => {
             <source src="/burra bunglow.mp4" type="video/mp4" />
           </video>
 
-          {!isMainVideoLoaded && (
+          if (!isMainVideoLoaded && (
             <div
               className="absolute inset-0"
               style={{
@@ -247,7 +248,7 @@ const HeroSection = () => {
                 backgroundPosition: "center",
               }}
             />
-          )}
+          ))
         </div>
 
         {/* Vine on the VERY left edge - covers entire section height */}
@@ -466,6 +467,12 @@ const HeroSection = () => {
                             <p className="text-xs text-emerald-700 flex items-center gap-1 mt-0.5">
                               <CheckCircle className="w-3 h-3" /> Per day · {opt.note}
                             </p>
+                            {opt.hasOffer && (
+                              <div className="mt-2 inline-flex items-center gap-1 bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                                <Sparkles className="w-3 h-3" />
+                                {opt.offerText}
+                              </div>
+                            )}
                             {formData.roomType === opt.label && (
                               <div className="mt-2 text-xs text-emerald-600 font-semibold flex items-center gap-1">
                                 <CheckCircle className="w-3 h-3" />
@@ -476,6 +483,30 @@ const HeroSection = () => {
                         ))}
                       </div>
                     </div>
+
+                    {/* Summer Offer Banner - Shown when Annexe is selected */}
+                    {formData.roomType === "Annexe" && (
+                      <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl p-4 text-white shadow-lg">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center shrink-0">
+                            <Tag className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold mb-1">🎉 SPECIAL SUMMER OFFER!</p>
+                            <p className="text-xs text-white/90 leading-relaxed">
+                              Book Annexe for 3 nights and get 20% off. Rates inclusive of breakfast and taxes. 
+                              Offer valid till 30th May.
+                            </p>
+                            <div className="mt-2 flex items-center gap-2">
+                              <div className="bg-white text-orange-600 text-xs font-bold px-2 py-0.5 rounded-full">
+                                20% OFF
+                              </div>
+                              <span className="text-xs text-white/80">Valid till 30th May</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="bg-gray-50 rounded-2xl p-6">
                       <h3 className="text-xl font-serif font-bold text-gray-900 mb-6">
@@ -530,7 +561,7 @@ const HeroSection = () => {
                             className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
                           >
                             <option value="Burra Bungalow">Burra Bungalow — ₹23,000/day</option>
-                            <option value="Annexe">Annexe — ₹12,000/day</option>
+                            <option value="Annexe">Annexe — ₹12,000/day (Summer Offer: 20% off for 3+ nights)</option>
                             <option value="Burra Bungalow + Annexe Combo">Burra Bungalow + Annexe Combo — ₹30,000/day</option>
                           </select>
                         </div>

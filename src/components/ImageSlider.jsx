@@ -8,6 +8,11 @@ export default function ImageSlider() {
   // Sample slides - replace with your actual images
   const slides = [
     {
+      desktop: "/bannerofr.webp",
+      mobile: "/mobileOfr.webp",
+      alt: "Slide 1",
+    },
+    {
       desktop: "/Home banner 02_V02.webp",
       mobile: "/Home banner 01_V01.webp",
       alt: "Slide 1",
@@ -87,7 +92,7 @@ export default function ImageSlider() {
       </div>
 
       {/* Navigation Buttons */}
-      <button
+      {/* <button
         onClick={goToPrevious}
         className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 
                    bg-white/20 backdrop-blur-md hover:bg-white/30 
@@ -111,7 +116,7 @@ export default function ImageSlider() {
         aria-label="Next slide"
       >
         <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
-      </button>
+      </button> */}
 
       {/* Dot Indicators */}
       <div
