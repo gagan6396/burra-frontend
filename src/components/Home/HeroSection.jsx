@@ -46,8 +46,8 @@ const HeroSection = () => {
 
   /* Pricing data for modal reference */
   const pricingOptions = [
-    { label: "Burra Bungalow", price: "₹23,000", note: "Incl. breakfast & taxes", hasOffer: false },
-    { label: "Annexe", price: "₹12,000", note: "Incl. breakfast & taxes", hasOffer: true, offerText: "Book 3 nights & get 20% off! Valid till 30th May" },
+    { label: "Burra Bungalow - 3 Bedroom Villa", price: "₹23,000", note: "Incl. breakfast & taxes", hasOffer: false },
+    { label: "Annexe - 2 Bedroom Villa", price: "₹12,000", note: "Incl. breakfast & taxes", hasOffer: true, offerText: "Book 3 nights & get 20% off! Valid till 30th May" },
     { label: "Burra Bungalow + Annexe Combo", price: "₹30,000", note: "Incl. breakfast & taxes", hasOffer: false },
   ];
 
@@ -449,7 +449,7 @@ const HeroSection = () => {
                     <div className="bg-amber-50 rounded-2xl p-5 border border-amber-200">
                       <h3 className="text-base font-serif font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <Tag className="w-4 h-4 text-amber-700" />
-                        Select Your Room
+                        Select Your Villa
                       </h3>
                       <div className="space-y-3">
                         {pricingOptions.map((opt, i) => (

@@ -303,13 +303,13 @@ const RoomsSection = () => {
 
   const pricingOptions = [
     {
-      label: "Burra Bungalow",
+      label: "Burra Bungalow - 3 Bedroom Villa",
       price: "₹23,000",
       note: "Incl. breakfast & taxes",
       hasOffer: false,
     },
     {
-      label: "Annexe",
+      label: "Annexe - 2 Bedroom Villa",
       price: "₹12,000",
       note: "Incl. breakfast & taxes",
       hasOffer: true,
@@ -1018,7 +1018,7 @@ const RoomsSection = () => {
                   Burra Bungalow
                 </h4>
                 <p className="text-xs text-gray-500 mb-4">
-                  3 Bedrooms · Up to 6 guests
+                  3 Bedroom Villa
                 </p>
                 <div className="mt-auto">
                   <p className="text-3xl font-bold text-[#a08144]">₹23,000</p>
@@ -1044,7 +1044,7 @@ const RoomsSection = () => {
                   Annexe
                 </h4>
                 <p className="text-xs text-gray-500 mb-4">
-                  2 Bedrooms · Forest &amp; valley views
+                  2 Bedroom Villa
                 </p>
                 <div className="mt-auto">
                   <p className="text-3xl font-bold text-[#a08144]">₹12,000</p>
@@ -1239,7 +1239,7 @@ const RoomsSection = () => {
                     <div className="bg-amber-50 rounded-2xl p-5 border border-amber-200">
                       <h3 className="text-base font-serif font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <Tag className="w-4 h-4 text-amber-700" />
-                        Select Your Room
+                        Select Your Villa
                       </h3>
                       <div className="space-y-3">
                         {pricingOptions.map((opt, i) => (
