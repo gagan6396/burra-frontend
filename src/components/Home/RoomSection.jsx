@@ -313,7 +313,7 @@ const RoomsSection = () => {
       price: "₹12,000",
       note: "Incl. breakfast & taxes",
       hasOffer: true,
-      offerText: "Book 3 nights & get 20% off! Valid till 30th May",
+      offerText: "Book 3 nights & get 20% off! Valid till 31st May",
     },
     {
       label: "Burra Bungalow + Annexe Combo",
@@ -889,7 +889,7 @@ const RoomsSection = () => {
                           <p className="text-sm text-gray-700 leading-relaxed">{rooms[1].summerOffer}</p>
                           <div className="mt-3 flex items-center gap-2 flex-wrap">
                             <div className="bg-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full">20% OFF</div>
-                            <span className="text-xs text-orange-700">Valid till 30th May</span>
+                            <span className="text-xs text-orange-700">Valid till 31st May</span>
                           </div>
                         </div>
                       </div>
@@ -1298,7 +1298,7 @@ const RoomsSection = () => {
                                 20% OFF
                               </div>
                               <span className="text-xs text-white/80">
-                                Valid till 30th May
+                                Valid till 31st May
                               </span>
                             </div>
                           </div>
