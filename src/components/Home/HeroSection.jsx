@@ -494,8 +494,8 @@ const HeroSection = () => {
                           <div>
                             <p className="text-sm font-bold mb-1">🎉 SPECIAL SUMMER OFFER!</p>
                             <p className="text-xs text-white/90 leading-relaxed">
-                              Book Annexe for 3 nights and get 20% off. Rates inclusive of breakfast and taxes. 
-                              Offer valid till 30th May.
+                              Book Annexe for 3 nights and get 20% off. 
+                              Offer valid till 31st May.
                             </p>
                             <div className="mt-2 flex items-center gap-2">
                               <div className="bg-white text-orange-600 text-xs font-bold px-2 py-0.5 rounded-full">

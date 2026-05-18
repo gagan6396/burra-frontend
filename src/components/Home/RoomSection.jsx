@@ -115,7 +115,7 @@ const rooms = [
     checkIn: "2:00 PM",
     checkOut: "12:00 PM",
     summerOffer:
-      "Special summer offer - Book for 3 nights and get 20% off. Rates inclusive of breakfast and taxes. Offer valid till 30th May. (Valid for bookings made through the website.)",
+      "Special summer offer - Book for 3 nights and get 20% off. Offer valid till 31st May. (Valid for bookings made through the website.)",
   },
 ];
 
