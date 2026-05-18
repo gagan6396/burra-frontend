@@ -301,15 +301,18 @@ const RoomsSection = () => {
     }
   };
 
+  // ── FIXED: value keys now match exactly what openModal() passes ──
   const pricingOptions = [
     {
-      label: "Burra Bungalow - 3 Bedroom Villa",
+      label: "Burra Bungalow",
+      displayLabel: "Burra Bungalow - 3 Bedroom Villa",
       price: "₹23,000",
       note: "Incl. breakfast & taxes",
       hasOffer: false,
     },
     {
-      label: "Annexe - 2 Bedroom Villa",
+      label: "Annexe",
+      displayLabel: "Annexe - 2 Bedroom Villa",
       price: "₹12,000",
       note: "Incl. breakfast & taxes",
       hasOffer: true,
@@ -317,6 +320,7 @@ const RoomsSection = () => {
     },
     {
       label: "Burra Bungalow + Annexe Combo",
+      displayLabel: "Burra Bungalow + Annexe Combo",
       price: "₹30,000",
       note: "Incl. breakfast & taxes",
       hasOffer: false,
@@ -1253,7 +1257,7 @@ const RoomsSection = () => {
                             }`}
                           >
                             <p className="text-xs font-semibold text-gray-700">
-                              {opt.label}
+                              {opt.displayLabel}
                             </p>
                             <p className="text-lg font-bold text-[#a08144]">
                               {opt.price}
@@ -1362,8 +1366,7 @@ const RoomsSection = () => {
                             Burra Bungalow — ₹23,000/day
                           </option>
                           <option value="Annexe">
-                            Annexe — ₹12,000/day (Summer Offer: 20% off for 3+
-                            nights)
+                            Annexe — ₹12,000/day (Summer Offer: 20% off for 3+ nights)
                           </option>
                           <option value="Burra Bungalow + Annexe Combo">
                             Burra Bungalow + Annexe Combo — ₹30,000/day
