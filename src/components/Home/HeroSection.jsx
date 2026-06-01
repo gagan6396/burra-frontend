@@ -47,7 +47,7 @@ const HeroSection = () => {
   /* Pricing data for modal reference */
   const pricingOptions = [
     { label: "Burra Bungalow", price: "₹23,000", note: "Incl. breakfast & taxes", hasOffer: false },
-    { label: "Annexe", price: "₹12,000", note: "Incl. breakfast & taxes", hasOffer: true, offerText: "Book 3 nights & get 20% off! Valid till 31st May" },
+    { label: "Annexe", price: "₹12,000", note: "Incl. breakfast & taxes", hasOffer: false,  },
     { label: "Burra Bungalow + Annexe Combo", price: "₹30,000", note: "Incl. breakfast & taxes", hasOffer: false },
   ];
 
@@ -485,7 +485,7 @@ const HeroSection = () => {
                     </div>
 
                     {/* Summer Offer Banner - Shown when Annexe is selected */}
-                    {formData.roomType === "Annexe" && (
+                    {/* {formData.roomType === "Annexe" && (
                       <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl p-4 text-white shadow-lg">
                         <div className="flex items-start gap-3">
                           <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center shrink-0">
@@ -506,7 +506,7 @@ const HeroSection = () => {
                           </div>
                         </div>
                       </div>
-                    )}
+                    )} */}
 
                     <div className="bg-gray-50 rounded-2xl p-6">
                       <h3 className="text-xl font-serif font-bold text-gray-900 mb-6">
@@ -561,7 +561,7 @@ const HeroSection = () => {
                             className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
                           >
                             <option value="Burra Bungalow">Burra Bungalow — ₹23,000/day</option>
-                            <option value="Annexe">Annexe — ₹12,000/day (Summer Offer: 20% off for 3+ nights)</option>
+                            <option value="Annexe">Annexe — ₹12,000/day </option>
                             <option value="Burra Bungalow + Annexe Combo">Burra Bungalow + Annexe Combo — ₹30,000/day</option>
                           </select>
                         </div>

@@ -114,8 +114,8 @@ const rooms = [
     badge: "Premium",
     checkIn: "2:00 PM",
     checkOut: "12:00 PM",
-    summerOffer:
-      "Special summer offer - Book for 3 nights and get 20% off. Offer valid till 31st May. (Valid for bookings made through the website.)",
+    // summerOffer:
+    //   "Special summer offer - Book for 3 nights and get 20% off. (Valid for bookings made through the website.)",
   },
 ];
 
@@ -315,8 +315,8 @@ const RoomsSection = () => {
       displayLabel: "Annexe - 2 Bedroom Villa",
       price: "₹12,000",
       note: "Incl. breakfast & taxes",
-      hasOffer: true,
-      offerText: "Book 3 nights & get 20% off! Valid till 31st May",
+      hasOffer: false,
+      offerText: "Book 3 nights & get 20% off!",
     },
     {
       label: "Burra Bungalow + Annexe Combo",
@@ -888,14 +888,13 @@ const RoomsSection = () => {
                         <div className="w-10 h-10 bg-orange-200 rounded-lg flex items-center justify-center shrink-0">
                           <Tag className="w-5 h-5 text-orange-700" />
                         </div>
-                        <div>
+                        {/* <div>
                           <p className="text-sm font-bold text-orange-800 mb-1">SPECIAL SUMMER OFFER</p>
                           <p className="text-sm text-gray-700 leading-relaxed">{rooms[1].summerOffer}</p>
                           <div className="mt-3 flex items-center gap-2 flex-wrap">
                             <div className="bg-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full">20% OFF</div>
-                            <span className="text-xs text-orange-700">Valid till 31st May</span>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   )}
@@ -1282,7 +1281,7 @@ const RoomsSection = () => {
                       </div>
                     </div>
 
-                    {formData.roomType === "Annexe" && (
+                    {/* {formData.roomType === "Annexe" && (
                       <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl p-4 text-white shadow-lg">
                         <div className="flex items-start gap-3">
                           <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center shrink-0">
@@ -1293,21 +1292,17 @@ const RoomsSection = () => {
                               🎉 SPECIAL SUMMER OFFER!
                             </p>
                             <p className="text-xs text-white/90 leading-relaxed">
-                              Book Annexe for 3 nights and get 20% off. Offer valid till
-                              31st May.
+                              Book Annexe for 3 nights and get 20% off.
                             </p>
                             <div className="mt-2 flex items-center gap-2">
                               <div className="bg-white text-orange-600 text-xs font-bold px-2 py-0.5 rounded-full">
                                 20% OFF
                               </div>
-                              <span className="text-xs text-white/80">
-                                Valid till 31st May
-                              </span>
                             </div>
                           </div>
                         </div>
                       </div>
-                    )}
+                    )} */}
 
                     <div className="bg-gray-50 rounded-2xl p-5">
                       <h3 className="text-lg font-serif font-bold text-gray-900 mb-5">
@@ -1366,7 +1361,7 @@ const RoomsSection = () => {
                             Burra Bungalow — ₹23,000/day
                           </option>
                           <option value="Annexe">
-                            Annexe — ₹12,000/day (Summer Offer: 20% off for 3+ nights)
+                            Annexe — ₹12,000/day 
                           </option>
                           <option value="Burra Bungalow + Annexe Combo">
                             Burra Bungalow + Annexe Combo — ₹30,000/day

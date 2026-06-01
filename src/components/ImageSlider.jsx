@@ -7,11 +7,11 @@ export default function ImageSlider() {
 
   // Sample slides - replace with your actual images
   const slides = [
-    {
-      desktop: "/bannerofr.webp",
-      mobile: "/mobileOfr.webp",
-      alt: "Slide 1",
-    },
+    // {
+    //   desktop: "/bannerofr.webp",
+    //   mobile: "/mobileOfr.webp",
+    //   alt: "Slide 1",
+    // },
     {
       desktop: "/Home banner 02_V02.webp",
       mobile: "/Home banner 01_V01.webp",
