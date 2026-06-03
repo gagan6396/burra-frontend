@@ -107,8 +107,8 @@ const BurraBungalow = () => {
     {
       icon: Phone, title: "For Reservations",
       items: [
-        { text: "+91 9810301645", href: "tel:+919810301645" },
-        { text: "+91 9845155496", href: "tel:+919845155496" },
+        { text: "+91 9810891889", href: "tel:+919810891889" },
+        // { text: "+91 9845155496", href: "tel:+919845155496" },
       ],
     },
     {
