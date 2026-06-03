@@ -36,7 +36,8 @@ import {
   BookOpen,
   Mountain,
   Star,
-  Camera
+  Camera,
+  Tag
 } from "lucide-react";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -73,6 +74,8 @@ const Annexe = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const modalRef = useRef(null);
+
+  const BASE_URLL = "https://burrabungalow.com";
 
   useReveal();
 
@@ -111,18 +114,42 @@ const Annexe = () => {
     { name: "Guest Bedroom", description: "Cozy guest bedroom with queen-size bed, heated blankets, and attached bathroom.", icon: Bed, features: "Garden views, Reading nook, Comfortable seating", bg: "bg-amber-50", iconBg: "bg-amber-100", iconColor: "text-amber-600", border: "border-amber-100" },
   ];
 
+  const pricingOptions = [
+    {
+      label: "Burra Bungalow",
+      displayLabel: "Burra Bungalow - 3 Bedroom Villa",
+      price: "₹23,000",
+      note: "Incl. breakfast & taxes",
+      hasOffer: false,
+    },
+    {
+      label: "Annexe",
+      displayLabel: "Annexe - 2 Bedroom Villa",
+      price: "₹12,000",
+      note: "Incl. breakfast & taxes",
+      hasOffer: false,
+      offerText: "Book 3 nights & get 20% off!",
+    },
+    {
+      label: "Burra Bungalow + Annexe Combo",
+      displayLabel: "Burra Bungalow + Annexe Combo",
+      price: "₹30,000",
+      note: "Incl. breakfast & taxes",
+      hasOffer: false,
+    },
+  ];
+
   const contactInfo = [
     {
       icon: Phone, title: "For Reservations",
       items: [
         { text: "+91 9810891889", href: "tel:+919810891889" },
-        // { text: "+91 9845155496", href: "tel:+919845155496" },
       ],
     },
     {
       icon: Mail, title: "Email Inquiries",
       items: [
-        { text: "mrinalinipahawa@gmail.com", href: "mailto:mrinalinipahawa@gmail.com" },
+        { text: "mrinalinipahwa@gmail.com", href: "mailto:mrinalinipahwa@gmail.com" },
         { text: "rageshrir@gmail.com", href: "mailto:rageshrir@gmail.com" },
       ],
     },
@@ -163,12 +190,16 @@ const Annexe = () => {
     };
   }, [isModalOpen]);
 
-  const openModal = () => {
+  const openModal = (roomType = "Annexe") => {
     setIsModalOpen(true); setIsSubmitted(false);
-    setFormData({ name:"", email:"", phone:"", checkIn:"", checkOut:"", guests:"2", message:"", roomType:"Annexe" });
+    setFormData({ name:"", email:"", phone:"", checkIn:"", checkOut:"", guests:"2", message:"", roomType });
     setErrors({});
   };
   const closeModal = () => setIsModalOpen(false);
+
+  const handleRoomTypeSelection = (roomType) => {
+    setFormData((prev) => ({ ...prev, roomType }));
+  };
 
   const validateForm = () => {
     const e = {};
@@ -191,7 +222,7 @@ const Annexe = () => {
     if (!validateForm()) return;
     setIsSubmitting(true);
     try {
-      await fetch("https://burrabungalow.com/api/contact/", {
+      await fetch(`${BASE_URLL}/api/contact/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -202,7 +233,8 @@ const Annexe = () => {
         setFormData({ name:"", email:"", phone:"", checkIn:"", checkOut:"", guests:"2", message:"", roomType:"Annexe" });
         closeModal();
       }, 3000);
-    } catch {
+    } catch (error) {
+      console.error("Form submit error:", error);
       alert("Failed to submit enquiry. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -282,7 +314,7 @@ const Annexe = () => {
         </section>
 
         {/* ══════════════════════════════════
-            GALLERY — Image Left, Content Right
+            GALLERY — Image Left, Content Right with Book Now Button
         ══════════════════════════════════ */}
         <section className="max-w-7xl mx-auto px-4 py-16">
           <div className="reveal grid lg:grid-cols-2 gap-12 items-center">
@@ -375,6 +407,14 @@ const Annexe = () => {
                 <br /><br />
                 Step out onto the private gallery to take in panoramic forest views, where the sights and sounds of nature create a deeply calming atmosphere. Inside, elegant pinewood interiors, warm textures, and carefully curated details enhance the sense of quiet sophistication.
               </p>
+              {/* Book Now Button added here */}
+              <button
+                onClick={() => openModal("Annexe")}
+                className="mt-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg inline-flex items-center gap-2"
+              >
+                <Calendar className="w-5 h-5" />
+                Book Your Stay
+              </button>
             </div>
           </div>
         </section>
@@ -453,20 +493,11 @@ const Annexe = () => {
                       <span className="font-medium">Features:</span> {bedroom.features}
                     </div>
                   </div>
-                  {/* <div className="mt-auto pt-3 border-t border-white/70 text-xs text-gray-500 flex items-center gap-1.5">
-                    <Bath className="w-3.5 h-3.5" />
-                    Attached bathroom
-                  </div> */}
                 </div>
               );
             })}
           </div>
         </section>
-
-        {/* ══════════════════════════════════
-            LIVING AREA
-        ══════════════════════════════════ */}
-       
 
         {/* ══════════════════════════════════
             BONFIRE
@@ -584,43 +615,7 @@ const Annexe = () => {
         </section>
 
         {/* ══════════════════════════════════
-            BOOKING CTA (Commented out as requested)
-        ══════════════════════════════════ */}
-        {/* <section className="relative py-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-stone-900 overflow-hidden">
-          <div
-            className="absolute inset-0 opacity-[.04]"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%)",
-              backgroundSize: "20px 20px",
-            }}
-          />
-          <div className="relative reveal text-center max-w-2xl mx-auto px-4">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="h-px w-10 bg-emerald-300" />
-              <span className="text-xs font-semibold tracking-[.18em] uppercase text-emerald-300">
-                Book Your Stay
-              </span>
-              <div className="h-px w-10 bg-emerald-300" />
-            </div>
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Book Your Stay at Annexe
-            </h2>
-            <p className="text-emerald-200 mb-8 leading-relaxed">
-              Experience modern comfort and convenience at our beautiful annexe.
-            </p>
-            <button
-              onClick={openModal}
-              className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-10 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-emerald-900/40 inline-flex items-center gap-2"
-            >
-              <Calendar className="w-5 h-5" />
-              Book Now
-            </button>
-          </div>
-        </section> */}
-
-        {/* ══════════════════════════════════
-            MODAL
+            ENHANCED MODAL (from RoomsSection)
         ══════════════════════════════════ */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -629,12 +624,13 @@ const Annexe = () => {
               ref={modalRef}
               className="modal-enter relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] overflow-y-auto"
             >
+              {/* Modal header */}
               <div className="sticky top-0 bg-white z-10 px-8 pt-8 pb-5 border-b border-gray-100">
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-semibold mb-3">
                       <MessageSquare className="w-4 h-4" />
-                      BOOK YOUR STAY — ANNEXE
+                      BOOK YOUR STAY — {formData.roomType.toUpperCase()}
                     </div>
                     <h2 className="text-3xl font-serif font-bold text-gray-900">
                       Plan Your Perfect <span className="text-[#caa355]">Getaway</span>
@@ -659,6 +655,14 @@ const Annexe = () => {
                     <p className="text-gray-600 mb-6">
                       Your inquiry has been received successfully. Our team will contact you within 2 hours.
                     </p>
+                    <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-200 max-w-md mx-auto mb-6">
+                      <p className="text-emerald-800 font-medium">
+                        Booking Reference: #BH{Date.now().toString().slice(-6)}
+                      </p>
+                      <p className="text-emerald-700 text-sm mt-2">
+                        Room Type: {formData.roomType}
+                      </p>
+                    </div>
                     <button
                       onClick={closeModal}
                       className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-8 rounded-xl transition-colors"
@@ -668,9 +672,51 @@ const Annexe = () => {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-1">
-                      <div className="bg-stone-50 rounded-2xl p-6 h-full">
-                        <h3 className="text-xl font-serif font-bold text-gray-900 mb-6">
+                    {/* Sidebar with Villa Selection */}
+                    <div className="lg:col-span-1 space-y-4">
+                      <div className="bg-amber-50 rounded-2xl p-5 border border-amber-200">
+                        <h3 className="text-base font-serif font-bold text-gray-900 mb-4 flex items-center gap-2">
+                          <Tag className="w-4 h-4 text-amber-700" />
+                          Select Your Villa
+                        </h3>
+                        <div className="space-y-3">
+                          {pricingOptions.map((opt, i) => (
+                            <button
+                              key={i}
+                              onClick={() => handleRoomTypeSelection(opt.label)}
+                              className={`w-full text-left p-3 rounded-xl border transition-all duration-300 ${
+                                formData.roomType === opt.label
+                                  ? "bg-amber-100 border-amber-400 shadow-md scale-105"
+                                  : "bg-white border-amber-100 hover:bg-amber-50 hover:border-amber-300 hover:scale-[1.02]"
+                              }`}
+                            >
+                              <p className="text-xs font-semibold text-gray-700">
+                                {opt.displayLabel}
+                              </p>
+                              <p className="text-lg font-bold text-[#a08144]">
+                                {opt.price}
+                              </p>
+                              <p className="text-xs text-emerald-700 flex items-center gap-1 mt-0.5">
+                                <CheckCircle className="w-3 h-3" /> Per day · {opt.note}
+                              </p>
+                              {opt.hasOffer && (
+                                <div className="mt-2 inline-flex items-center gap-1 bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                                  <Sparkles className="w-3 h-3" />
+                                  {opt.offerText}
+                                </div>
+                              )}
+                              {formData.roomType === opt.label && (
+                                <div className="mt-2 text-xs text-emerald-600 font-semibold flex items-center gap-1">
+                                  <CheckCircle className="w-3 h-3" /> Selected
+                                </div>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-50 rounded-2xl p-5">
+                        <h3 className="text-lg font-serif font-bold text-gray-900 mb-5">
                           Contact Information
                         </h3>
                         <div className="space-y-3">
@@ -679,19 +725,21 @@ const Annexe = () => {
                             return (
                               <div
                                 key={i}
-                                className="flex items-start gap-3 p-3 rounded-xl bg-white border border-gray-100"
+                                className="flex items-start gap-3 p-3 rounded-xl bg-white"
                               >
-                                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                  <Icon className="w-5 h-5 text-emerald-600" />
+                                <div className="w-9 h-9 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0">
+                                  <Icon className="w-4 h-4 text-emerald-600" />
                                 </div>
                                 <div>
-                                  <p className="font-medium text-gray-900 text-sm mb-1">{item.title}</p>
-                                  <div className="space-y-0.5">
+                                  <p className="font-medium text-gray-900 text-sm mb-1">
+                                    {item.title}
+                                  </p>
+                                  <div className="space-y-1">
                                     {item.items.map((sub, j) => (
                                       <a
                                         key={j}
                                         href={sub.href}
-                                        className="block text-gray-600 text-xs hover:text-emerald-600 transition-colors leading-relaxed"
+                                        className="block text-gray-600 text-xs hover:text-emerald-600 transition-colors"
                                       >
                                         {sub.text}
                                       </a>
@@ -705,7 +753,33 @@ const Annexe = () => {
                       </div>
                     </div>
 
+                    {/* Form */}
                     <div className="lg:col-span-2 space-y-5">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Room Type *
+                        </label>
+                        <div className="relative">
+                          <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <select
+                            name="roomType"
+                            value={formData.roomType}
+                            onChange={handleChange}
+                            className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900"
+                          >
+                            <option value="Burra Bungalow">
+                              Burra Bungalow — ₹23,000/day
+                            </option>
+                            <option value="Annexe">
+                              Annexe — ₹12,000/day 
+                            </option>
+                            <option value="Burra Bungalow + Annexe Combo">
+                              Burra Bungalow + Annexe Combo — ₹30,000/day
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
@@ -746,13 +820,14 @@ const Annexe = () => {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Check-in Date</label>
                           <div className="relative">
                             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                               type="date" name="checkIn" value={formData.checkIn} onChange={handleChange}
+                              min={new Date().toISOString().split("T")[0]}
                               className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-400 text-gray-900"
                             />
                           </div>
@@ -763,8 +838,44 @@ const Annexe = () => {
                             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                               type="date" name="checkOut" value={formData.checkOut} onChange={handleChange}
+                              min={formData.checkIn || new Date().toISOString().split("T")[0]}
                               className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-400 text-gray-900"
                             />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Guests</label>
+                          <div className="relative">
+                            <Staff className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <select
+                              name="guests"
+                              value={formData.guests}
+                              onChange={handleChange}
+                              className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900"
+                            >
+                              {[1, 2, 3, 4, 5, 6].map((n) => (
+                                <option key={n} value={n}>
+                                  {n} Guest{n > 1 ? "s" : ""}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                        <div className="flex items-center gap-3">
+                          <Clock className="w-5 h-5 text-amber-600 shrink-0" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">
+                              Check-in &amp; Check-out Timings
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              Check-in: <span className="font-semibold">2:00 PM</span> | Check-out: <span className="font-semibold">12:00 PM (Noon)</span>
+                            </p>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              Early check-in and late check-out subject to availability
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -775,30 +886,38 @@ const Annexe = () => {
                           <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                           <textarea
                             name="message" value={formData.message} onChange={handleChange}
-                            rows={4} placeholder="Tell us about any special requirements..."
+                            rows={3} placeholder="Tell us about any special requirements..."
                             className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none text-gray-900 ${errors.message ? "border-red-300 bg-red-50" : "border-gray-200 focus:border-emerald-400"}`}
                           />
                           {errors.message && <div className="flex items-center gap-1 mt-1 text-red-600 text-sm"><AlertCircle className="w-4 h-4" />{errors.message}</div>}
                         </div>
                       </div>
 
-                      <button
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                        className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl transition-all hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                            Sending...
-                          </>
-                        ) : (
-                          <>
-                            <Send className="w-5 h-5" />
-                            Send Booking Request
-                          </>
-                        )}
-                      </button>
+                      <div className="pt-2">
+                        <button
+                          onClick={handleSubmit}
+                          disabled={isSubmitting}
+                          className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl transition-all hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              Sending...
+                            </>
+                          ) : (
+                            <>
+                              <Send className="w-5 h-5" />
+                              Send Booking Request
+                            </>
+                          )}
+                        </button>
+
+                        <div className="mt-4 bg-gray-50 rounded-xl p-3 text-center">
+                          <p className="text-sm text-gray-600 flex items-center justify-center gap-1">
+                            <Award className="w-4 h-4" /> Your information is secure
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
